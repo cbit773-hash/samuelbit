@@ -1,6 +1,6 @@
-# 01. Estándares Técnicos y Convenciones (Zaki Bit)
+# 01. Estándares Técnicos y Convenciones (InvestPro)
 
-Este documento establece las normativas de desarrollo y arquitectura técnica requeridas para construir la plataforma **Zaki Bit** de manera robusta, escalable y mantenible. Como equipo de alto rendimiento, debemos seguir estas directrices de manera estricta.
+Este documento establece las normativas de desarrollo y arquitectura técnica requeridas para construir la plataforma **InvestPro** de manera robusta, escalable y mantenible. Como equipo de alto rendimiento, debemos seguir estas directrices de manera estricta.
 
 ## 1. Convenciones de Código y TypeScript
 
@@ -17,7 +17,7 @@ Este documento establece las normativas de desarrollo y arquitectura técnica re
 
 ## 2. Gestión del Estado (State Management)
 
-Zaki Bit opera en un entorno de alta frecuencia de datos. Separamos el estado en dos categorías claramente definidas:
+InvesPro opera en un entorno de alta frecuencia de datos. Separamos el estado en dos categorías claramente definidas:
 
 ### 2.1 Estado del Servidor (React Query)
 - Usado para datos asíncronos REST (Historial de transacciones, Perfil de usuario, Configuración KYC).
@@ -40,7 +40,7 @@ Zaki Bit opera en un entorno de alta frecuencia de datos. Separamos el estado en
 ### 3.1 Container vs Presentational
 - Los componentes en `src/features/*/components` deben dividirse lógicamente:
   - **Containers**: Manejan lógica, llamadas a hooks (Zustand/React Query), y pasan datos hacia abajo.
-  - **Presentational**: Reciben `props`, no tienen estado global, se enfocan en la UI y la estética "Zaki Bit".
+  - **Presentational**: Reciben `props`, no tienen estado global, se enfocan en la UI y la estética "InvesPro".
 
 ### 3.2 Manejo de Errores y Suspense
 - Cada módulo grande (Trading, Wallet, Admin) debe estar envuelto en su propio `<ErrorBoundary>`.

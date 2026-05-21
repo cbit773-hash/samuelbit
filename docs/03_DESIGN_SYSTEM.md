@@ -1,6 +1,6 @@
-# 03. Sistema de Diseño UX/UI (Zaki Bit)
+# 03. Sistema de Diseño UX/UI (InvesPro)
 
-La interfaz de **Zaki Bit** debe transmitir seguridad, tecnología avanzada y profesionalismo institucional. A diferencia de las plataformas genéricas, Zaki Bit apuesta por una estética moderna, limpia y altamente reactiva.
+La interfaz de **InvesPro** debe transmitir seguridad, tecnología avanzada y profesionalismo institucional. A diferencia de las plataformas genéricas, InvesPro apuesta por una estética moderna, limpia y altamente reactiva.
 
 ## 1. Identidad Visual (Paleta de Colores)
 
@@ -9,7 +9,7 @@ El sistema de diseño de Tailwind CSS debe configurarse estrictamente con los si
 - **Background (Negro Profundo)**: `#050505`
   - Utilizado para el fondo principal de la aplicación. Elimina el contraste estridente del blanco absoluto, reduciendo la fatiga visual de los traders que observan monitores por horas.
 - **Primary (Naranja Bit)**: `#f59e0b` (Amber 500)
-  - Color de acción principal (Call to Action). Representa la energía, el dinamismo crypto y la identidad central de "Zaki".
+  - Color de acción principal (Call to Action). Representa la energía, el dinamismo crypto y la identidad central de "InvesPro".
   - *Variaciones*: Hover `#d97706` (Amber 600), Glow Effect `rgba(245, 158, 11, 0.5)`.
 - **Surface / Glassmorphism**: `rgba(255, 255, 255, 0.03)`
   - Utilizado para tarjetas (Cards), paneles laterales y modales. Se debe combinar con `backdrop-blur-md` y bordes sutiles `border border-white/10`.
@@ -22,7 +22,7 @@ El sistema de diseño de Tailwind CSS debe configurarse estrictamente con los si
 
 - **Fuente Principal**: *Inter* o *Roboto* para legibilidad máxima en datos numéricos e interfaces densas de trading.
 - **Jerarquía**:
-  - `h1`: Títulos de panel (ej. "Dashboard Inversor", "Zaki Legal").
+  - `h1`: Títulos de panel (ej. "Dashboard Inversor", "InvesPro Legal").
   - Monospace: **Obligatorio** usar fuentes monoespaciadas para los precios en tiempo real, saldos y tablas de órdenes (`font-mono`), para evitar que el texto "salte" al cambiar los dígitos.
 
 ## 3. Componentes Base (UI Kit)
@@ -42,7 +42,7 @@ El componente fundamental de layout. Todo panel de control, gráfico o formulari
 
 ## 4. Gráficos (Charting)
 - Los gráficos provistos por `lightweight-charts` deben configurarse programáticamente para usar el fondo `#050505`, eliminar los bordes por defecto, y colorear las velas usando la paleta semántica.
-- **Marca de agua**: Zaki Bit exige que el gráfico incluya una marca de agua (Watermark) semitransparente con el nombre "Zaki Bit" en el fondo, para branding en caso de que los usuarios tomen capturas de pantalla de sus operaciones.
+- **Marca de agua**: InvesPro exige que el gráfico incluya una marca de agua (Watermark) semitransparente con el nombre "InvesPro" en el fondo, para branding en caso de que los usuarios tomen capturas de pantalla de sus operaciones.
 
 ## 5. Responsive Design
 - **Mobile First**: Aunque las terminales de trading suelen ser Desktop, la app debe ser completamente responsiva.

@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — Zaki Bit Trading Platform
+# ARCHITECTURE.md — InvesPro Trading Platform
 
 > **Versión:** 1.0.0  
 > **Fecha:** 2026-04  
@@ -17,7 +17,7 @@
 | **React 18** | ^18.3 | Concurrent Mode + Suspense para UI sin bloqueos durante actualizaciones de precios en tiempo real. Ecosistema maduro para trading UI. |
 | **Vite 5** | ^5.2 | HMR instantáneo crítico para iterar en componentes de charts. Build con ESBuild: 10-20× más rápido que CRA. Tree-shaking agresivo reduce bundle final. |
 | **TypeScript 5** | ^5.4 | Tipado estricto para esquemas de órdenes, posiciones y datos de mercado. Evita errores en cálculos financieros críticos. |
-| **Tailwind CSS 3** | ^3.4 | Utility-first permite construir el sistema "Zaki Bit". Variables: `primary: #f59e0b` (Naranja Bit), `background: #050505` (Negro profundo), `surface: rgba(255, 255, 255, 0.03)` (Efecto cristal GlassCards). |
+| **Tailwind CSS 3** | ^3.4 | Utility-first permite construir el sistema "InvesPro". Variables: `primary: #f59e0b` (Naranja Bit), `background: #050505` (Negro profundo), `surface: rgba(255, 255, 255, 0.03)` (Efecto cristal GlassCards). |
 
 ### Web3 & Crypto
 
@@ -41,7 +41,7 @@
 | **WebSocket nativo** | Stream de velas (OHLCV), precios bid/ask, book de órdenes |
 | **Finage API** | Datos de Forex e Índices (REST + WS) |
 | **Binance WS API** | Datos de criptomonedas |
-| **lightweight-charts 4** | Renderizado de candlestick charts (WebGL, 60fps). Debe incluir el logo de Zaki Bit como marca de agua en el fondo del gráfico. |
+| **lightweight-charts 4** | Renderizado de candlestick charts (WebGL, 60fps). Debe incluir el logo de InvesPro como marca de agua en el fondo del gráfico. |
 
 ### Backend (Referencia para contratos de API)
 
@@ -54,7 +54,7 @@ Node.js 20 + Fastify + PostgreSQL + Redis (pub/sub para WS fan-out)
 ## 2. Arquitectura de Carpetas (Feature-Based)
 
 ```
-zaki-bit/
+invespro-bit/
 ├── public/
 │   └── assets/                    # Logos, íconos estáticos
 │
@@ -63,7 +63,7 @@ zaki-bit/
 │   │   ├── App.tsx                # Root con RouterProvider
 │   │   ├── router.tsx             # React Router v6 con rutas protegidas
 │   │   ├── providers.tsx          # QueryClientProvider + ToastProvider
-│   │   └── global.css             # Variables CSS Zaki Bit
+│   │   └── global.css             # Variables CSS InvesPro
 │   │
 │   ├── features/                  # Módulos por dominio funcional
 │   │   │
@@ -124,9 +124,9 @@ zaki-bit/
 │   │   │   └── types/
 │   │   │       └── wallet.types.ts
 │   │   │
-│   │   ├── legal/                 # MÓDULO G: Zaki Legal
+│   │   ├── legal/                 # MÓDULO G: InvesPro Legal
 │   │   │   └── components/
-│   │   │       └── LegalView.tsx          # 4 Pilares: T&C Globales, Regulación Internacional, KYC, Protección de Datos (GDPR). Estética "Zaki Bit".
+│   │   │       └── LegalView.tsx          # 4 Pilares: T&C Globales, Regulación Internacional, KYC, Protección de Datos (GDPR). Estética "InvesPro".
 │   │   │
 │   │   ├── advisor/               # MÓDULO E: Panel Asesor
 │   │   │   ├── components/
@@ -149,8 +149,8 @@ zaki-bit/
 │   │   ├── components/
 │   │   │   ├── layout/
 │   │   │   │   ├── Navbar.tsx
-│   │   │   │   ├── Sidebar.tsx            # Dinámico por rol. Incluye logo Zaki Bit y enlace a Zaki Legal en el footer.
-│   │   │   │   └── MainLayout.tsx         # Refleja identidad Zaki Bit (colores #050505 y Naranja Bit).
+│   │   │   │   ├── Sidebar.tsx            # Dinámico por rol. Incluye logo InvesPro y enlace a InvesPro Legal en el footer.
+│   │   │   │   └── MainLayout.tsx         # Refleja identidad InvesPro (colores #050505 y Naranja Bit).
 │   │   │   ├── ui/
 │   │   │   │   ├── GlassCard.tsx          # Componente base con efecto cristal surface rgba(255, 255, 255, 0.03).
 │   │   │   │   ├── Button.tsx
@@ -191,34 +191,42 @@ interface BaseUser {
   email: string;
   fullName: string;
   phone: string;
-  role: 'INVESTOR' | 'ADVISOR' | 'SUPER_ADMIN';
+  role: 'CLIENT' | 'AGENT' | 'TEAM_LEADER' | 'FLOOR_MANAGER' | 'MANAGER' | 'CHIEF' | 'HEAD';
   status: 'ACTIVE' | 'SUSPENDED' | 'PENDING_KYC';
   createdAt: Date;
   updatedAt: Date;
   twoFactorEnabled: boolean;
 }
 
-// Inversor — cliente de trading
-interface Investor extends BaseUser {
-  role: 'INVESTOR';
-  advisorId: string | null;          // FK → Advisor
+// Cliente (Inversor) — cliente de trading
+interface Client extends BaseUser {
+  role: 'CLIENT';
+  agentId: string | null;            // FK → Agent
   account: TradingAccount;
-  kycStatus: 'PENDING' | 'VERIFIED' | 'REJECTED'; // Gestionado por Asesor o SuperAdmin
+  kycStatus: 'PENDING' | 'VERIFIED' | 'REJECTED'; 
   riskProfile: 'CONSERVATIVE' | 'MODERATE' | 'AGGRESSIVE';
 }
 
-// Asesor — gestiona cartera de inversores
-interface Advisor extends BaseUser {
-  role: 'ADVISOR';
-  clientIds: string[];               // FK[] → Investor
-  commissionRate: number;            // % sobre ganancias de clientes
-  totalAUM: number;                  // Assets Under Management (USD)
+// Agente — mano de obra fundamental, marcación y ventas
+interface Agent extends BaseUser {
+  role: 'AGENT';
+  teamId: string;                    // FK → Team (Mesa)
+  clientIds: string[];               // FK[] → Client
+  conversionRate: number;            
+  totalFtds: number;                  
 }
 
-// Super Admin — control total de la plataforma
-interface SuperAdmin extends BaseUser {
-  role: 'SUPER_ADMIN';
-  permissions: AdminPermission[];    // Granular para auditoría
+// Team Leader & Floor Manager — gestión de mesas y apoyo en llamadas
+interface FloorManagement extends BaseUser {
+  role: 'TEAM_LEADER' | 'FLOOR_MANAGER';
+  managedTeamIds: string[];          // Mesas a cargo
+  sosAlertsHandled: number;          
+}
+
+// Alta Dirección (Manager, Chief, Head) — control total, auditoría y métricas globales
+interface Executive extends BaseUser {
+  role: 'MANAGER' | 'CHIEF' | 'HEAD';
+  permissions: AdminPermission[];    // Acceso a auditoría de leads, depósitos y retención
 }
 
 // Cuenta de trading del inversor
@@ -277,43 +285,50 @@ interface Order {
 export type Permission =
   | 'trading:execute'          // Ejecutar órdenes
   | 'trading:view'             // Ver charts y precios
-  | 'wallet:deposit'           // Iniciar depósito
-  | 'wallet:withdraw'          // Solicitar retiro
-  | 'advisor:view_clients'     // Ver lista de clientes asignados
-  | 'advisor:view_accounts'    // Ver cuentas de clientes
-  | 'advisor:manage_kyc'       // Aprobar o rechazar KYC de sus clientes
-  | 'admin:manage_users'       // CRUD de usuarios
-  | 'admin:view_metrics'       // Ver métricas globales
-  | 'admin:approve_withdrawals'// Aprobar/rechazar retiros
-  | 'admin:manage_roles'       // Asignar roles
-  | 'admin:manage_kyc';        // Aprobar o rechazar KYC globalmente
+  | 'crm:dialer'               // Uso del auto-dialer
+  | 'crm:manage_leads'         // Ver y gestionar leads de la empresa
+  | 'crm:monitor_agents'       // Monitorear agentes y alertas SOS
+  | 'admin:view_metrics'       // Ver métricas de depósitos y retención globales
+  | 'admin:manage_users';      // Gestión de todo el personal
 
 export const ROLE_PERMISSIONS: Record<BaseUser['role'], Permission[]> = {
-  INVESTOR: [
+  CLIENT: [
     'trading:execute',
     'trading:view',
-    'wallet:deposit',
-    'wallet:withdraw',
   ],
-  ADVISOR: [
+  AGENT: [
     'trading:view',
-    'advisor:view_clients',
-    'advisor:view_accounts',
-    'advisor:manage_kyc',
+    'crm:dialer',
   ],
-  SUPER_ADMIN: [
+  TEAM_LEADER: [
     'trading:view',
-    'admin:manage_users',
+    'crm:monitor_agents',
+  ],
+  FLOOR_MANAGER: [
+    'trading:view',
+    'crm:monitor_agents',
+    'crm:manage_leads',
+  ],
+  MANAGER: [
+    'trading:view',
     'admin:view_metrics',
-    'admin:approve_withdrawals',
-    'admin:manage_roles',
-    'admin:manage_kyc',
+  ],
+  CHIEF: [
+    'trading:view',
+    'admin:view_metrics',
+    'crm:manage_leads',
+  ],
+  HEAD: [
+    'trading:view',
+    'crm:manage_leads',
+    'admin:view_metrics',
+    'admin:manage_users',
   ],
 };
 
 // Helper hook — uso en componentes
 // const { can } = usePermissions();
-// if (can('trading:execute')) { ... }
+// if (can('crm:monitor_agents')) { ... }
 ```
 
 ---
@@ -552,37 +567,50 @@ RSI(candles: Candle[], period: 14): number[]
 ```
 SEMANA 1  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅ ARCHITECTURE.md (este documento)
-  ✅ tailwind.config.js (tema Zaki Bit: Naranja #f59e0b, Fondo #050505)
+  ✅ tailwind.config.js (tema InvesPro: Naranja #f59e0b, Fondo #050505)
   ✅ Estructura de carpetas src/features/
   ✅ Layout principal (Navbar + Sidebar dinámico por rol)
 
 SEMANA 2  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  ⏳ [ESPERANDO CONFIRMACIÓN] CandlestickChart con lightweight-charts
-  ⏳ WebSocket hook + integración Finage/Binance
-  ⏳ Indicadores técnicos (BB, SMA, RSI)
+  ✅ CandlestickChart con lightweight-charts
+  ✅ WebSocket hook + integración Binance
+  ✅ Zustand store completo de trading + cálculos de margen
 
 SEMANA 3  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  ⏳ OrderTicket (manual) + AutoSignalPanel (AI)
-  ⏳ Zustand store completo de trading + cálculos de margen
+  ✅ Módulo Wallet y Web3 (Coinbase Wallet)
+  ✅ Sección InvesPro Legal (4 Pilares: T&C, Regulación, KYC, Protección de Datos)
 
 SEMANA 4  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  ⏳ Módulo Wallet y Web3 (Depósitos, retiros, Faucet Coinbase Wallet)
-  ⏳ Panel Asesor + Dashboard Admin
-  ⏳ Sección Zaki Legal (4 Pilares: T&C, Regulación, KYC, Protección de Datos)
+  ✅ Implementación Jerarquía Institucional (7 Roles: Head, Chief, Manager, Floor, Team Leader, Agent, Client)
+  ✅ Dashboards Operativos (Agent Dialer, Floor Monitor, Head Audit)
+
+SEMANA 5  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ⏳ Arquitectura Backend: Integración con Supabase (Esquemas SQL RLS, Profiles, Leads, Deposits)
+  ⏳ Autenticación Real en Nube
 ```
 
 ---
 
-## 9. Arquitectura de la Landing Page (Estilo eToro)
+## 9. Arquitectura de la Landing Page (Estilo TradingIM)
 
-La página de aterrizaje (Landing Page) pública debe ser un embudo de conversión altamente optimizado, con una estructura y experiencia de usuario (UX) inspirada en plataformas globales de confianza como **eToro**.
+La página de aterrizaje (Landing Page) pública será el principal embudo de conversión. A pedido explícito, su estructura de navegación, pestañas informativas y disposición de elementos se inspirará fuertemente en **TradingIM**.
 
-### 9.1 Características Clave de la Landing Page
-- **Hero Section Amigable y Clara**: Un mensaje directo sobre el acceso a mercados globales con un Call-to-Action (CTA) visible ("Empieza a invertir" / "Únete ahora"). Debe transmitir confianza inmediata, alejándose de estéticas "oscuras/hacker" para ser amigable con el usuario retail.
-- **Social Proof y Datos Abiertos**: Mostrar métricas reales (o simuladas para MVP) como "Usuarios registrados", "Volumen de operaciones" y logotipos de cumplimiento normativo (Zaki Legal).
-- **Educación e Información Transparente**: Secciones dedicadas a explicar *cómo funciona*, los beneficios de la integración Web3 (Coinbase Wallet) y la seguridad de los fondos. 
-- **Presentación de Activos**: Carruseles interactivos o mini-gráficos (`MiniSparkline.tsx`) en vivo mostrando los activos principales (BTC, EUR/USD, SP500).
-- **Diseño Responsivo y Limpio**: A diferencia de la terminal de trading (`#050505`), la landing page puede utilizar un modo dual o temas más claros y limpios para la captación inicial, haciendo la transición hacia la terminal profesional una vez que el usuario inicia sesión.
+### 9.1 Estructura del Menú de Navegación (Navbar Pública)
+El encabezado debe contener las siguientes pestañas desplegables (Dropdowns):
+- **Cuentas de Trading**: Silver, Gold, Platinum, Islámica.
+- **Mercados**: Trading de Forex, Comercio de Commodities, Mercado de Acciones, Negociación de Metales, Trading de Índices.
+- **Plataformas**: Acceso rápido al Webtrader (InvesPro Terminal).
+- **Asociaciones**: "Hazte socio" (Programa para Asesores/IBs).
+- **Empresa**: Acerca de, Legal (Redirección a "InvesPro Legal"), Contáctenos.
+- **Botones CTA**: "Iniciar sesión" y "Abrir cuenta" (Destacado en Naranja Bit).
+
+### 9.2 Secciones de la Landing Page (Flujo de Scroll)
+1. **Hero Section (Inicio)**: Título fuerte como *"Comercia derivados financieros con nuestra plataforma de vanguardia"*. Botones claros para registro.
+2. **Ticker de Precios en Vivo**: Una barra horizontal dinámica mostrando activos clave (EUR/USD, GBP/USD, Oro, BTC/USDT) con su porcentaje de cambio en tiempo real (`MiniSparkline.tsx`).
+3. **Beneficios Clave**: Tarjetas (GlassCards) destacando: *Confiabilidad (Regulación), Seguridad y Asistencia (Soporte 24/7)*.
+4. **Herramientas Avanzadas**: Presentación visual (Mockup de la plataforma) promocionando las herramientas: gráficos de velas, temporalidades, indicadores (Fibonacci) e interfaz amigable.
+5. **Lo que Ofrecemos (Grid de características)**: Apalancamiento atractivo, Amplia gama de CFDs, Cuentas personalizadas y Spreads inteligentes.
+6. **Footer Extendido**: Información de contacto, selector de idioma, enlaces a Políticas de Privacidad, Términos y un bloque obligatorio visible de **Advertencia de Riesgo (Risk Warning)** sobre operaciones con CFDs.
 
 ---
 
@@ -595,4 +623,4 @@ Para acelerar el desarrollo del MVP y garantizar escalabilidad, el backend y la 
 
 ---
 
-*Documento generado como base de la plataforma Zaki Bit. Todos los módulos de código deben respetar los tipos, rutas y convenciones definidos aquí.*
+*Documento generado como base de la plataforma InvesPro. Todos los módulos de código deben respetar los tipos, rutas y convenciones definidos aquí.*
