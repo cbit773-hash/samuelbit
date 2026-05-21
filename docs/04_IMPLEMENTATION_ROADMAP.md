@@ -1,6 +1,6 @@
-# 04. Roadmap de Implementación (Zaki Bit)
+# 04. Roadmap de Implementación (InvesPro)
 
-Este documento detalla el plan de acción estructurado en 4 semanas (Fases) para llevar la plataforma **Zaki Bit** desde su diseño arquitectónico hasta un MVP funcional.
+Este documento detalla el plan de acción estructurado en 4 semanas (Fases) para llevar la plataforma **InvesPro** desde su diseño arquitectónico hasta un MVP funcional.
 
 ## Fase 1: Arquitectura Base y Diseño UI (Semana 1)
 **Objetivo:** Establecer los cimientos del proyecto y el sistema de diseño.
@@ -16,7 +16,7 @@ Este documento detalla el plan de acción estructurado en 4 semanas (Fases) para
 ## Fase 2: Trading Engine y WebSockets (Semana 2)
 **Objetivo:** Implementar la visualización de datos de mercado en tiempo real.
 
-- [ ] Integración de `lightweight-charts` con renderizado WebGL optimizado y marca de agua de "Zaki Bit".
+- [ ] Integración de `lightweight-charts` con renderizado WebGL optimizado y marca de agua de "InvesPro".
 - [ ] Configuración de `Zustand` store para el motor de trading global.
 - [ ] Desarrollo de `useMarketWebSocket.ts` para conexión con APIs (Finage/Binance).
 - [ ] Creación de Web Workers para el cálculo asíncrono de indicadores (SMA, Bollinger Bands, RSI).
@@ -36,7 +36,7 @@ Este documento detalla el plan de acción estructurado en 4 semanas (Fases) para
 
 - [ ] Integración Web3 con **Coinbase Wallet SDK**.
 - [ ] Componente Faucet: Smart Contract interaction para inyección de fondos de prueba al Balance.
-- [ ] Módulo **Zaki Legal** (T&C, Privacidad, KYC de 2 niveles, AML visual).
+- [ ] Módulo **InvesPro Legal** (T&C, Privacidad, KYC de 2 niveles, AML visual).
 - [ ] Dashboard del Asesor (Vista de clientes asignados y su Margin Level).
 - [ ] Dashboard Super Admin (Aprobación KYC, gestión global, analíticas de depósitos/retiros).
 

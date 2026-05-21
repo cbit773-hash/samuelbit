@@ -13,7 +13,7 @@ git remote add origin https://github.com/cbit773-hash/samuelbit.git
 
 # 3. Guardar la documentación arquitectónica actual
 git add .
-git commit -m "docs: inicialización de la arquitectura y roadmap del proyecto Zaki Bit"
+git commit -m "docs: inicialización de la arquitectura y roadmap del proyecto InvesPro"
 
 # 4. Subir los cambios a la rama principal (main/master)
 git branch -M main
@@ -49,7 +49,7 @@ npm install @supabase/supabase-js
 ```
 
 ## Paso 4: Configuración de Tailwind CSS
-Abre el archivo generado `tailwind.config.js` y configurarlo con los colores "Zaki Bit" (Naranja Bit `#f59e0b` y Fondo `#050505`).
+Abre el archivo generado `tailwind.config.js` y configurarlo con los colores "InvesPro" (Naranja Bit `#f59e0b` y Fondo `#050505`).
 ```javascript
 /** @type {import('tailwindcss').Config} */
 export default {
