@@ -1,7 +1,7 @@
 import { 
   PhoneCall, Target, AlertTriangle, Phone, CheckCircle, 
-  Clock, Calendar, MessageSquare, CreditCard, Trophy, 
-  FileText, Shield, Coffee, Zap, Link as LinkIcon
+  Calendar, MessageSquare, CreditCard, Trophy, 
+  FileText, Shield, Coffee, Link as LinkIcon
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';

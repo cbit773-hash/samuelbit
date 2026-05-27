@@ -1,4 +1,4 @@
-import { Trophy, TrendingUp, Users } from 'lucide-react';
+import { Trophy, Users } from 'lucide-react';
 
 const teams = [
   {

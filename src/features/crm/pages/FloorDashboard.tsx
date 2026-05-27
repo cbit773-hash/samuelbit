@@ -1,10 +1,10 @@
 import { 
   Thermometer, Activity, Headphones, AlertOctagon, 
   Shuffle, Recycle, Clock, MessageSquare, ArrowUpCircle, 
-  FileText, Users, Mic, Target, Zap, CheckCircle2
+  FileText, Mic, Target, Zap, CheckCircle2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export function FloorDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();

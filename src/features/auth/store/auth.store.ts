@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     
     // Escuchar cambios (login, logout)
-    supabase.auth.onAuthStateChange(async (event, session) => {
+    supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
         set({ user: session.user, role: profile?.role || 'CLIENT', isAuthenticated: true, isLoading: false });

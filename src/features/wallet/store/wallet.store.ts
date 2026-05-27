@@ -24,10 +24,9 @@ export const useWalletStore = create<WalletState>((set) => ({
       const coinbaseWallet = new CoinbaseWalletSDK({
         appName: 'InvestPRO Platform',
         appLogoUrl: 'https://placeholder.com/logo.png',
-        darkMode: true
       });
 
-      const ethereum = coinbaseWallet.makeWeb3Provider('https://mainnet.infura.io/v3/YOUR_INFURA_KEY', 1);
+      const ethereum = coinbaseWallet.makeWeb3Provider();
       
       // Request accounts
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' }) as string[];

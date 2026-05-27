@@ -1,12 +1,12 @@
 import { 
-  BarChart, Users, CheckSquare, Clock, Filter, Search, 
+  BarChart, CheckSquare, Clock, 
   ShieldCheck, Activity, PieChart, FileText, AlertCircle, 
   Database, Lock, DollarSign, CreditCard, CheckCircle, XCircle, 
-  UploadCloud, RefreshCw, Send, Eye, Loader2
+  UploadCloud, RefreshCw, Send, Loader2
 } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { getAllDeposits, approveDeposit, rejectDeposit, getDepositKPIs } from '../../../core/supabase/services/deposits.service';
-import { getAllLeads, getUnassignedLeads } from '../../../core/supabase/services/leads.service';
+import { getAllLeads } from '../../../core/supabase/services/leads.service';
 import { getAllProfiles } from '../../../core/supabase/services/profiles.service';
 import type { Deposit, Lead, Profile } from '../../../core/supabase/database.types';
 

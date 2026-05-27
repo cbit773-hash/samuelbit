@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { UserPlus, Shield, Ban, RefreshCw, CheckCircle, X, Search, Lock, Unlock, Loader2 } from 'lucide-react';
+import { RefreshCw, Search, Loader2 } from 'lucide-react';
 import { getAllProfiles, updateProfile } from '../../../../core/supabase/services/profiles.service';
 import { getAllTeams } from '../../../../core/supabase/services/teams.service';
 import type { Profile, UserRole } from '../../../../core/supabase/database.types';

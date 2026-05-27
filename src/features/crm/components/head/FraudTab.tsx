@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShieldAlert, Ban, CheckCircle, Eye, AlertTriangle, Wifi, Search, Zap } from 'lucide-react';
+import { Ban, CheckCircle, Eye, AlertTriangle, Search, Zap } from 'lucide-react';
 
 type Severity = 'low' | 'medium' | 'high' | 'critical';
 type AlertStatus = 'open' | 'investigating' | 'resolved' | 'false_positive';
