@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { DollarSign, TrendingUp, ArrowRightLeft, BarChart, AlertTriangle, Trophy, ShieldAlert, Zap, Activity, Globe, ArrowUpRight, ArrowDownRight, Loader2, Users } from 'lucide-react';
+import { DollarSign, TrendingUp, ArrowRightLeft, BarChart, AlertTriangle, Trophy, ShieldAlert, Zap, Globe, Loader2, Users } from 'lucide-react';
 import { getAllDeposits, getDepositKPIs } from '../../../../core/supabase/services/deposits.service';
-import { getAllLeads } from '../../../../core/supabase/services/leads.service';
 import { getAllProfiles } from '../../../../core/supabase/services/profiles.service';
 import type { Deposit, Profile } from '../../../../core/supabase/database.types';
 

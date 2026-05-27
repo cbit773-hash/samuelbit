@@ -1,4 +1,4 @@
-import { X, Phone, Mail, MapPin, DollarSign, PhoneCall, FileText, Clock, ArrowUpRight, ArrowDownRight, ChevronRight } from 'lucide-react';
+import { X, Phone, Mail, MapPin, DollarSign, PhoneCall, FileText, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 interface ClientProfileProps {
   lead: { id: string; name: string; phone: string; email: string; country: string; status: string; agent: string; created: string };

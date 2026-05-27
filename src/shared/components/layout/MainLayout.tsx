@@ -1,7 +1,7 @@
 import { Outlet, Navigate, Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../features/auth/store/auth.store";
 import type { Role } from "../../../features/auth/store/auth.store";
-import { LayoutDashboard, LineChart, Wallet, BookOpen, Users, LogOut, PhoneCall, ListChecks, Target, Crown, ShieldAlert, Headphones, HeartHandshake, TrendingUp, BarChart3, ArrowUpCircle, Shield, Bell } from "lucide-react";
+import { LayoutDashboard, LineChart, Wallet, BookOpen, Users, LogOut, PhoneCall, ListChecks, Target, Crown, ShieldAlert, Headphones, BarChart3, ArrowUpCircle } from "lucide-react";
 
 // ─── Mapa de home por rol ────────────────────────────────────────────────────
 const ROLE_HOME: Record<Role, string> = {

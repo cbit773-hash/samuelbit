@@ -1,8 +1,8 @@
 import { 
   TrendingUp, Headphones, BookOpen, Trophy, AlertTriangle, 
-  Flame, Clock, MessageSquare, DollarSign, ShieldAlert, 
-  Target, Award, PlayCircle, BarChart, CheckCircle, UserX, 
-  Calculator, LifeBuoy, Users, Star
+  Flame, Clock, MessageSquare, 
+  Target, Award, PlayCircle, BarChart, 
+  Calculator, LifeBuoy, Star
 } from 'lucide-react';
 import { useState } from 'react';
 

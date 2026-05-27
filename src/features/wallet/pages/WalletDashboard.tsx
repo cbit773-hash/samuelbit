@@ -1,11 +1,9 @@
 import { useWalletStore } from '../store/wallet.store';
-import { useTradingStore } from '../../trading/store/trading.store';
-import { Wallet, ArrowDownToLine, History, ExternalLink, ShieldAlert } from 'lucide-react';
+import { Wallet, ArrowDownToLine, History, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
 
 export function WalletDashboard() {
   const { address, cryptoBalance, isConnecting, connectWallet, disconnectWallet } = useWalletStore();
-  const increaseBalance = useTradingStore(state => state.setCurrentPrice); // Truco para forzar re-render o podríamos agregar un método addBalance
   const [faucetLoading, setFaucetLoading] = useState(false);
 
   const handleFaucetDeposit = () => {

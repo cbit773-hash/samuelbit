@@ -1,7 +1,7 @@
 import { 
-  PhoneCall, TrendingUp, DollarSign, Users, AlertTriangle,
+  PhoneCall, TrendingUp, DollarSign, AlertTriangle,
   Briefcase, HeartHandshake, BarChart3, MessageSquare, Gift,
-  ShieldCheck, FileText, Activity, Target, Zap
+  ShieldCheck, Activity
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
