@@ -1,115 +1,161 @@
-import { useEffect, useRef } from 'react';
-import { createChart, ColorType } from 'lightweight-charts';
+import { useEffect, useRef, useState } from 'react';
+import {
+  createChart,
+  ColorType,
+  type IChartApi,
+  type ISeriesApi,
+  type CandlestickData,
+  type Time,
+} from 'lightweight-charts';
+import { MousePointerClick, Loader2 } from 'lucide-react';
 import { useTradingStore } from '../store/trading.store';
+import { useTradingChartData } from '../hooks/useTradingChartData';
+import { useChartPositionOverlays } from '../hooks/useChartPositionOverlays';
+import { CHART_THEME } from '../config/chart-theme';
 
 export function CandlestickChart() {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<any>(null);
-  const seriesRef = useRef<any>(null);
-  const lastTimeRef = useRef<number>(0);
-  const currentPrice = useTradingStore((state) => state.currentPrice);
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
+  const prevSnapshotRef = useRef({ length: 0, firstTime: 0, lastTime: 0 });
 
-  // Inicializar Gráfico
+  const activeSymbol = useTradingStore((s) => s.activeSymbol);
+  const chartInterval = useTradingStore((s) => s.chartInterval);
+  const wsStatus = useTradingStore((s) => s.wsStatus);
+
+  const { candles, loading, error } = useTradingChartData();
+  const [chartReady, setChartReady] = useState(false);
+
+  useChartPositionOverlays(chartRef, seriesRef, chartReady);
+
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
     const chart = createChart(chartContainerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: '#050505' },
-        textColor: '#9ca3af',
+        background: { type: ColorType.Solid, color: CHART_THEME.background },
+        textColor: CHART_THEME.text,
       },
       grid: {
-        vertLines: { color: 'rgba(255, 255, 255, 0.05)' },
-        horzLines: { color: 'rgba(255, 255, 255, 0.05)' },
+        vertLines: { color: CHART_THEME.grid },
+        horzLines: { color: CHART_THEME.grid },
       },
-      crosshair: {
-        mode: 1,
-        vertLine: { color: 'rgba(245, 158, 11, 0.5)', width: 1, style: 3 },
-        horzLine: { color: 'rgba(245, 158, 11, 0.5)', width: 1, style: 3 },
-      },
+      crosshair: { mode: 1 },
       watermark: {
         visible: true,
         fontSize: 48,
         horzAlign: 'center',
         vertAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.03)',
+        color: CHART_THEME.watermark,
         text: 'InvestPRO',
       },
-      timeScale: {
-        timeVisible: true,
-        secondsVisible: false,
-      },
+      timeScale: { timeVisible: true, secondsVisible: false },
+      rightPriceScale: { borderVisible: false },
     });
 
     chartRef.current = chart;
-
-    const candlestickSeries = chart.addCandlestickSeries({
-      upColor: '#10b981',
-      downColor: '#ef4444',
+    seriesRef.current = chart.addCandlestickSeries({
+      upColor: CHART_THEME.upColor,
+      downColor: CHART_THEME.downColor,
       borderVisible: false,
-      wickUpColor: '#10b981',
-      wickDownColor: '#ef4444',
+      wickUpColor: CHART_THEME.upColor,
+      wickDownColor: CHART_THEME.downColor,
+    });
+    setChartReady(true);
+
+    chart.subscribeClick((param) => {
+      if (!param.point || !seriesRef.current) return;
+      const price = seriesRef.current.coordinateToPrice(param.point.y);
+      if (price != null && Number.isFinite(price)) {
+        const decimals = price > 1000 ? 2 : price > 1 ? 4 : 6;
+        const rounded = Number(price.toFixed(decimals));
+        useTradingStore.getState().setChartClickPrice(rounded);
+      }
     });
 
-    seriesRef.current = candlestickSeries;
-
-    // Generar datos históricos simulados (velas diarias)
-    const data = [];
-    const now = Math.floor(Date.now() / 1000);
-    let time = now - 86400 * 100; // Hace 100 días
-    let lastClose = 60000;
-    for (let i = 0; i < 100; i++) {
-      time += 86400;
-      const open = lastClose + (Math.random() - 0.5) * 500;
-      const close = open + (Math.random() - 0.5) * 1000;
-      const high = Math.max(open, close) + Math.random() * 500;
-      const low = Math.min(open, close) - Math.random() * 500;
-      data.push({ time, open, high, low, close });
-      lastClose = close;
-    }
-    candlestickSeries.setData(data as any);
-    lastTimeRef.current = time;
-
-    // Ajuste responsive
-    const handleResize = () => {
-      chart.applyOptions({ width: chartContainerRef.current?.clientWidth });
-    };
-    window.addEventListener('resize', handleResize);
+    const ro = new ResizeObserver(() => {
+      if (chartContainerRef.current && chartRef.current) {
+        chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
+      }
+    });
+    ro.observe(chartContainerRef.current);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      ro.disconnect();
+      setChartReady(false);
       chart.remove();
+      chartRef.current = null;
+      seriesRef.current = null;
+      prevSnapshotRef.current = { length: 0, firstTime: 0, lastTime: 0 };
     };
   }, []);
 
-  // Actualizar el gráfico en vivo con el WebSocket (protegido)
   useEffect(() => {
-    if (!seriesRef.current || !currentPrice || !lastTimeRef.current) return;
+    const series = seriesRef.current;
+    if (!series || candles.length === 0) return;
+
+    const first = candles[0]!.time;
+    const last = candles[candles.length - 1]!;
+    const snap = prevSnapshotRef.current;
+
+    const isFullReload =
+      snap.length === 0 ||
+      candles.length !== snap.length ||
+      first !== snap.firstTime;
 
     try {
-      // Usar el día siguiente al último dato para asegurar orden ascendente
-      const nextTime = lastTimeRef.current + 86400;
-      seriesRef.current.update({
-        time: nextTime as any,
-        open: currentPrice - 50,
-        high: currentPrice + 100,
-        low: currentPrice - 100,
-        close: currentPrice,
-      });
+      if (isFullReload) {
+        series.setData(candles as CandlestickData<Time>[]);
+        chartRef.current?.timeScale().fitContent();
+      } else if (last.time > snap.lastTime) {
+        series.update(last as CandlestickData<Time>);
+      } else if (last.time === snap.lastTime) {
+        series.update(last as CandlestickData<Time>);
+      }
     } catch {
-      // Silenciar errores de orden de timestamps en actualizaciones rápidas
+      series.setData(candles as CandlestickData<Time>[]);
+      chartRef.current?.timeScale().fitContent();
     }
-  }, [currentPrice]);
+
+    prevSnapshotRef.current = {
+      length: candles.length,
+      firstTime: first,
+      lastTime: last.time,
+    };
+  }, [candles]);
+
+  useEffect(() => {
+    prevSnapshotRef.current = { length: 0, firstTime: 0, lastTime: 0 };
+    seriesRef.current?.setData([]);
+  }, [activeSymbol, chartInterval]);
 
   return (
-    <div className="w-full h-full min-h-[400px] bg-[#050505] rounded-xl overflow-hidden relative">
-      {/* Price Overlay */}
-      <div className="absolute top-4 left-4 z-10">
-        <h2 className="text-white font-bold text-2xl tracking-tight">BTC/USDT</h2>
-        <div className={`text-xl font-mono ${currentPrice ? 'text-emerald-500' : 'text-gray-500'}`}>
-          {currentPrice ? currentPrice.toFixed(2) : 'Conectando WS...'}
-        </div>
+    <div className="w-full h-full min-h-[400px] bg-[#232629] overflow-hidden relative">
+      <div className="absolute bottom-3 left-3 z-10 pointer-events-none flex items-center gap-1.5 rounded-md border border-white/10 bg-black/40 px-2 py-1 backdrop-blur-sm">
+        <MousePointerClick size={12} className="text-[#b0b5ad] shrink-0" />
+        <p className="text-[10px] text-[#b0b5ad] leading-tight">
+          Clic en el gráfico → precio para Límite / Stop
+        </p>
       </div>
+
+      {loading && candles.length === 0 && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#232629]/90">
+          <Loader2 className="animate-spin text-primary" size={32} />
+        </div>
+      )}
+
+      {error && candles.length === 0 && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#232629]/95 px-4">
+          <p className="text-sm text-rose-400 text-center">{error}</p>
+        </div>
+      )}
+
+      {wsStatus === 'offline' && candles.length > 0 && (
+        <div className="absolute top-3 right-3 z-10 text-[10px] text-amber-400 font-bold bg-amber-500/15 border border-amber-500/30 px-2 py-1 rounded">
+          Reconectando mercado…
+        </div>
+      )}
+
       <div ref={chartContainerRef} className="w-full h-full absolute inset-0" />
     </div>
   );

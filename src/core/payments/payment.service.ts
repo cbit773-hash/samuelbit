@@ -1,73 +1,99 @@
 // ============================================================
-// INVESPRO — Payment Orchestrator
-// Conecta NOWPayments (o Stripe) con el sistema de Wallet
+// INVESPRO — Payment Orchestrator (client → Edge Functions)
+// NOWPayments API key lives server-side only.
 // ============================================================
 
-import { createInvoice, createDirectPayment, getPaymentStatus, RECOMMENDED_CRYPTOS } from './nowpayments';
-import { createDepositRequest, createWithdrawalRequest, getMyWallet } from '../supabase/services/wallet.service';
 import { supabase } from '../supabase/client';
+import { getMyWallet, getMyWalletOrCreate, getMyTransactions } from '../supabase/services/wallet.service';
+import { RECOMMENDED_CRYPTOS } from './nowpayments';
 
 export type PaymentGateway = 'nowpayments' | 'stripe' | 'manual';
+export type DepositMethod = 'crypto_invoice' | 'crypto_direct' | 'manual';
+
+interface EdgeError {
+  error?: string;
+}
+
+function mapEdgeErrorMessage(raw: string): string {
+  const lower = raw.toLowerCase();
+  if (lower.includes('nowpayments_api_key not configured')) {
+    return 'Pagos crypto no configurados en el servidor. Usa transferencia bancaria o contacta a soporte.';
+  }
+  if (lower.includes('unauthorized') || lower.includes('invalid session')) {
+    return 'Sesión expirada. Vuelve a iniciar sesión.';
+  }
+  if (lower.includes('amount must be between')) {
+    return 'El monto debe estar entre $10 y $100,000 USD.';
+  }
+  if (lower.includes('non-2xx') || lower.includes('edge function')) {
+    return 'No se pudo procesar el depósito. Revisa la configuración de pagos o usa transferencia manual.';
+  }
+  return raw;
+}
+
+async function parseInvokeError(error: {
+  message?: string;
+  context?: Response;
+}): Promise<string> {
+  let detail = error.message ?? 'Error de conexión con el servidor';
+
+  if (error.context) {
+    try {
+      const bodyText =
+        typeof error.context.text === 'function' ? await error.context.text() : '';
+      if (bodyText) {
+        try {
+          const body = JSON.parse(bodyText) as EdgeError;
+          if (body?.error) detail = body.error;
+        } catch {
+          detail = bodyText.slice(0, 300);
+        }
+      } else if (typeof error.context.json === 'function') {
+        const body = (await error.context.json()) as EdgeError;
+        if (body?.error) detail = body.error;
+      }
+    } catch {
+      // ignore parse failure
+    }
+  }
+
+  return mapEdgeErrorMessage(detail);
+}
+
+async function invokeFunction<T>(name: string, body: Record<string, unknown>): Promise<T | { error: string }> {
+  const { data, error } = await supabase.functions.invoke(name, { body });
+
+  if (error) {
+    console.error(`[${name}]`, error);
+    return { error: await parseInvokeError(error) };
+  }
+
+  const payload = data as T & EdgeError;
+  if (payload && typeof payload === 'object' && 'error' in payload && payload.error) {
+    return { error: mapEdgeErrorMessage(String(payload.error)) };
+  }
+
+  return payload as T;
+}
 
 // ─── Deposit Flow ────────────────────────────────────────────
 
-/**
- * Flujo completo de depósito crypto:
- * 1. Crea transacción en Supabase (status: processing)
- * 2. Crea invoice en NOWPayments
- * 3. Actualiza la transacción con el external_id y URL
- * 4. Retorna la URL de pago para redirigir al cliente
- */
 export async function initiateCryptoDeposit(params: {
   amount: number;
-  cryptoCurrency?: string;
 }): Promise<{ paymentUrl: string; transactionId: string } | { error: string }> {
-  const { amount, cryptoCurrency } = params;
-
-  // Validaciones
+  const { amount } = params;
   if (amount < 10) return { error: 'El monto mínimo es $10 USD' };
   if (amount > 100000) return { error: 'El monto máximo es $100,000 USD' };
 
-  // 1. Crear transacción en Supabase
-  const tx = await createDepositRequest({
+  const result = await invokeFunction<{ paymentUrl: string; transactionId: string }>('create-deposit', {
     amount,
-    payment_method: cryptoCurrency ? `crypto_${cryptoCurrency}` : 'crypto_usdt',
-    gateway: 'nowpayments',
+    method: 'crypto_invoice',
   });
 
-  if (!tx) return { error: 'Error al crear la transacción. Intenta de nuevo.' };
-
-  // 2. Crear invoice en NOWPayments
-  const invoice = await createInvoice({
-    amount,
-    orderId: tx.id,
-    description: `InvestPRO Deposit #${tx.id.slice(0, 8)} - $${amount} USD`,
-  });
-
-  if (!invoice) {
-    // Marcar transacción como fallida
-    await supabase.from('transactions').update({ status: 'failed', notes: 'NOWPayments invoice creation failed' }).eq('id', tx.id);
-    return { error: 'Error al conectar con el procesador de pagos. Intenta de nuevo.' };
-  }
-
-  // 3. Actualizar transacción con datos de NOWPayments
-  await supabase.from('transactions').update({
-    external_id: String(invoice.id),
-    external_url: invoice.invoice_url,
-    status: 'processing',
-  }).eq('id', tx.id);
-
-  // 4. Retornar URL de pago
-  return {
-    paymentUrl: invoice.invoice_url,
-    transactionId: tx.id,
-  };
+  if ('error' in result) return result;
+  return result;
 }
 
-/**
- * Flujo de depósito directo (sin hosted page):
- * Genera una dirección crypto específica para el pago.
- */
 export async function initiateDirectCryptoDeposit(params: {
   amount: number;
   cryptoCurrency: string;
@@ -76,152 +102,120 @@ export async function initiateDirectCryptoDeposit(params: {
   payAmount: number;
   payCurrency: string;
   transactionId: string;
-  expiresAt: string;
+  expiresAt: string | null;
 } | { error: string }> {
   const { amount, cryptoCurrency } = params;
-
   if (amount < 10) return { error: 'El monto mínimo es $10 USD' };
 
-  const tx = await createDepositRequest({
+  const result = await invokeFunction<{
+    payAddress: string;
+    payAmount: number;
+    payCurrency: string;
+    transactionId: string;
+    expiresAt: string | null;
+  }>('create-deposit', {
     amount,
-    payment_method: `crypto_${cryptoCurrency}`,
-    gateway: 'nowpayments',
+    method: 'crypto_direct',
+    crypto_currency: cryptoCurrency,
   });
 
-  if (!tx) return { error: 'Error al crear la transacción.' };
-
-  const payment = await createDirectPayment({
-    amount,
-    cryptoCurrency,
-    orderId: tx.id,
-  });
-
-  if (!payment) {
-    await supabase.from('transactions').update({ status: 'failed' }).eq('id', tx.id);
-    return { error: 'Error al generar dirección de pago.' };
-  }
-
-  await supabase.from('transactions').update({
-    external_id: payment.payment_id,
-    crypto_address: payment.pay_address,
-    crypto_network: cryptoCurrency.toUpperCase(),
-    status: 'processing',
-  }).eq('id', tx.id);
-
-  return {
-    payAddress: payment.pay_address,
-    payAmount: payment.pay_amount,
-    payCurrency: payment.pay_currency,
-    transactionId: tx.id,
-    expiresAt: payment.expiration_estimate_date,
-  };
+  if ('error' in result) return result;
+  return result;
 }
 
-/**
- * Flujo de depósito manual (transferencia bancaria):
- * Solo crea la transacción en Supabase con status pending.
- * El CHIEF la aprueba manualmente.
- */
 export async function initiateManualDeposit(params: {
   amount: number;
   notes?: string;
+  companyBankId?: string;
+  clientBank?: string;
+  cciOrigin?: string;
+  amountPenDeclared?: number;
+  receiptPath?: string;
 }): Promise<{ transactionId: string } | { error: string }> {
-  const tx = await createDepositRequest({
+  const result = await invokeFunction<{ transactionId: string }>('create-deposit', {
     amount: params.amount,
-    payment_method: 'bank_transfer',
-    gateway: 'manual',
-    notes: params.notes || 'Depósito por transferencia bancaria — pendiente de verificación',
+    method: 'manual',
+    notes: params.notes,
+    company_bank_id: params.companyBankId ?? null,
+    client_bank: params.clientBank ?? null,
+    cci_origin: params.cciOrigin ?? null,
+    amount_pen_declared: params.amountPenDeclared ?? null,
+    receipt_path: params.receiptPath ?? null,
   });
 
-  if (!tx) return { error: 'Error al registrar el depósito.' };
-  return { transactionId: tx.id };
+  if ('error' in result) return result;
+  return { transactionId: result.transactionId };
 }
 
 // ─── Withdrawal Flow ─────────────────────────────────────────
 
-/**
- * Solicitar retiro (requiere aprobación del CHIEF).
- */
 export async function initiateWithdrawal(params: {
   amount: number;
   method: 'crypto' | 'bank';
   cryptoAddress?: string;
   cryptoNetwork?: string;
   notes?: string;
-}): Promise<{ transactionId: string } | { error: string }> {
-  const wallet = await getMyWallet();
-
+  withdrawalBank?: string;
+  withdrawalCci?: string;
+  withdrawalHolder?: string;
+}): Promise<{ transactionId: string; newBalance?: number } | { error: string }> {
+  const wallet = await getMyWalletOrCreate();
   if (!wallet) return { error: 'No se encontró tu billetera.' };
   if (wallet.is_frozen) return { error: 'Tu billetera está congelada. Contacta a soporte.' };
-  if (wallet.balance < params.amount) return { error: `Saldo insuficiente. Balance: $${wallet.balance} USD` };
+  if (wallet.balance < params.amount) {
+    return { error: `Saldo insuficiente. Balance: $${wallet.balance} USD` };
+  }
   if (params.amount < 50) return { error: 'El retiro mínimo es $50 USD' };
 
-  const tx = await createWithdrawalRequest({
+  const result = await invokeFunction<{ transactionId: string; newBalance?: number }>('request-withdrawal', {
     amount: params.amount,
-    payment_method: params.method === 'crypto' ? 'crypto_usdt' : 'bank_transfer',
+    method: params.method,
     crypto_address: params.cryptoAddress,
     crypto_network: params.cryptoNetwork,
     notes: params.notes,
+    withdrawal_bank: params.withdrawalBank,
+    withdrawal_cci: params.withdrawalCci,
+    withdrawal_holder: params.withdrawalHolder,
   });
 
-  if (!tx) return { error: 'Error al crear la solicitud de retiro.' };
-  return { transactionId: tx.id };
+  if ('error' in result) return result;
+
+  return {
+    transactionId: result.transactionId,
+    newBalance: result.newBalance,
+  };
 }
 
-// ─── Status Checking ─────────────────────────────────────────
+// ─── Status (read-only — acreditación vía webhook IPN) ───────
 
-/**
- * Verificar el estado de un pago en NOWPayments
- * y actualizar la transacción en Supabase.
- */
-export async function syncPaymentStatus(transactionId: string): Promise<string> {
-  // Get transaction from Supabase
-  const { data: tx } = await supabase
+export async function getTransactionStatus(transactionId: string): Promise<string> {
+  const { data } = await supabase
     .from('transactions')
-    .select('*')
+    .select('status')
     .eq('id', transactionId)
     .single();
 
-  if (!tx || !tx.external_id) return 'unknown';
-
-  // Check status in NOWPayments
-  const status = await getPaymentStatus(tx.external_id);
-  if (!status) return tx.status;
-
-  // Map NOWPayments status to our status
-  let newStatus = tx.status;
-  if (status.payment_status === 'finished' || status.payment_status === 'confirmed') {
-    newStatus = 'completed';
-  } else if (status.payment_status === 'failed' || status.payment_status === 'expired') {
-    newStatus = 'failed';
-  } else if (status.payment_status === 'waiting' || status.payment_status === 'confirming') {
-    newStatus = 'processing';
-  }
-
-  // Update in Supabase if status changed
-  if (newStatus !== tx.status) {
-    const updates: Record<string, any> = { status: newStatus };
-    if (newStatus === 'completed') {
-      updates.completed_at = new Date().toISOString();
-      // Auto-approve crypto payments — update wallet balance
-      const { data: wallet } = await supabase
-        .from('wallets')
-        .select('*')
-        .eq('id', tx.wallet_id)
-        .single();
-
-      if (wallet) {
-        await supabase.from('wallets').update({
-          balance: Number(wallet.balance) + Number(tx.net_amount),
-          total_deposited: Number(wallet.total_deposited) + Number(tx.net_amount),
-        }).eq('id', tx.wallet_id);
-      }
-    }
-    await supabase.from('transactions').update(updates).eq('id', transactionId);
-  }
-
-  return newStatus;
+  return data?.status ?? 'unknown';
 }
 
-// ─── Re-export recommended cryptos for UI ────────────────────
-export { RECOMMENDED_CRYPTOS };
+/** @deprecated La acreditación es automática vía webhook. Usar getTransactionStatus. */
+export async function syncPaymentStatus(transactionId: string): Promise<string> {
+  return getTransactionStatus(transactionId);
+}
+
+export async function pollTransactionUntilComplete(
+  transactionId: string,
+  maxAttempts = 30,
+  intervalMs = 4000
+): Promise<string> {
+  for (let i = 0; i < maxAttempts; i++) {
+    const status = await getTransactionStatus(transactionId);
+    if (status === 'completed' || status === 'failed' || status === 'cancelled') {
+      return status;
+    }
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  return getTransactionStatus(transactionId);
+}
+
+export { RECOMMENDED_CRYPTOS, getMyWallet, getMyTransactions };

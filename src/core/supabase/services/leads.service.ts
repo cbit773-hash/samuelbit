@@ -1,8 +1,16 @@
-// ============================================================
-// INVESPRO — Servicio de Leads / CRM (Supabase)
+﻿// ============================================================
+// INVESPRO ÔÇö Servicio de Leads / CRM (Supabase)
 // ============================================================
 import { supabase } from '../client';
 import type { Lead, LeadInsert, LeadUpdate, LeadStatus } from '../database.types';
+import { isDemoUserId } from '../demo-ids';
+
+/** ID efectivo del agente: sesi├│n Auth o null si no hay login real */
+export async function getCurrentAgentId(): Promise<string | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || isDemoUserId(user.id)) return null;
+  return user.id;
+}
 
 /** Obtener todos los leads (para roles de liderazgo) */
 export async function getAllLeads(): Promise<Lead[]> {
@@ -105,4 +113,61 @@ export async function countLeads(): Promise<number> {
 
   if (error) { console.error('[Leads] Error counting leads:', error); return 0; }
   return count || 0;
+}
+
+/** KPIs del agente autenticado sobre sus leads */
+export async function getMyLeadStats(): Promise<{
+  total: number;
+  nuevo: number;
+  enProceso: number;
+  ftd: number;
+  descartado: number;
+  callbacks: number;
+}> {
+  const leads = await getMyLeads();
+  return {
+    total: leads.length,
+    nuevo: leads.filter((l) => l.status === 'Nuevo').length,
+    enProceso: leads.filter((l) =>
+      ['Contactado', 'En seguimiento', 'Cerca de cierre', 'No contesta'].includes(l.status)
+    ).length,
+    ftd: leads.filter((l) => l.status === 'Cerrado (FTD)').length,
+    descartado: leads.filter((l) => l.status === 'Descartado').length,
+    callbacks: leads.filter(
+      (l) =>
+        l.status === 'En seguimiento' ||
+        l.status === 'Cerca de cierre' ||
+        (l.notes?.toLowerCase().includes('callback') ?? false)
+    ).length,
+  };
+}
+
+/** Prioridad de cola de marcaci├│n: Nuevo primero, luego contacto, FTD/Descartado al final */
+export function sortLeadsForDialer(leads: Lead[]): Lead[] {
+  const priority: Record<string, number> = {
+    Nuevo: 0,
+    Contactado: 1,
+    'En seguimiento': 2,
+    'Cerca de cierre': 3,
+    'No contesta': 4,
+    'Cerrado (FTD)': 5,
+    Descartado: 6,
+  };
+  return [...leads].sort((a, b) => (priority[a.status] ?? 9) - (priority[b.status] ?? 9));
+}
+
+/** Leads activos para dialer (excluye cerrados y descartados) */
+export function getDialerQueue(leads: Lead[]): Lead[] {
+  return sortLeadsForDialer(leads).filter(
+    (l) => l.status !== 'Cerrado (FTD)' && l.status !== 'Descartado'
+  );
+}
+
+/** Actualizar lead propio (agente) ÔÇö requiere pol├¡tica RLS agente_actualiza_sus_leads */
+export async function updateMyLead(id: string, updates: LeadUpdate): Promise<Lead | null> {
+  const payload: LeadUpdate = {
+    ...updates,
+    ...(updates.status || updates.notes ? { last_contact: new Date().toISOString() } : {}),
+  };
+  return updateLead(id, payload);
 }

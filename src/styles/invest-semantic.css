@@ -1,0 +1,53 @@
+/**
+ * InvestPRO — tema oscuro institucional + acento verde lima
+ * Aplica a landing, /registro, auth y paneles por rol (PlatformShell).
+ */
+:root {
+  /* Marca */
+  --color-brand: #9fe870;
+  --color-brand-hover: #8fd85f;
+  --color-brand-ink: #163300;
+
+  /* CTA principal (mismo lima que /registro) */
+  --color-primary-conversion: #9fe870;
+  --color-primary-hover: #8fd85f;
+  --color-primary-soft: rgba(159, 232, 112, 0.12);
+  --color-on-primary: #163300;
+
+  /* Texto */
+  --color-foreground: #f5f6f4;
+  --color-foreground-muted: rgba(245, 246, 244, 0.72);
+  --color-muted-grey: rgba(245, 246, 244, 0.45);
+
+  /* Superficies */
+  --surface-page-canvas: #1a1d21;
+  --surface-elevated: #2a2d30;
+  --surface-elevated-2: #32363a;
+  --surface-inset: #232629;
+  --surface-info: rgba(159, 232, 112, 0.08);
+  --surface-form-card: #ffffff;
+  --color-foreground-on-form: #0e0f0c;
+  --color-muted-on-form: #454745;
+
+  /* Bordes y sombras */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --shadow-subtle: 1px solid var(--color-border);
+  --shadow-subtle-2: 0 0 0 2px rgba(159, 232, 112, 0.25);
+
+  /* Estados */
+  --color-success: #9fe870;
+  --color-danger: #ef4444;
+
+  /* Tipografía */
+  --font-display: var(--font-inter);
+  --radius-inputs: 10px;
+  --radius-cards: 12px;
+  --radius-buttons: 10px;
+}
+
+/* Tipografía display — sin color (evita pisar text-brand en logos) */
+.ip-type-display {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-display-sm);
+}

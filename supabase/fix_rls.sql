@@ -1,4 +1,5 @@
 -- ============================================================
+-- DEPRECATED — Usar migración 202605310001_profiles_rls_canonical.sql
 -- INVESPRO — FIX DEFINITIVO: Permisos RLS (Forbidden/500)
 -- Pega TODO esto en Supabase → SQL Editor → New Query → Run
 -- ============================================================

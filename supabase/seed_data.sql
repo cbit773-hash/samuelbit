@@ -113,7 +113,11 @@ INSERT INTO public.leads (first_name, last_name, phone, email, country, status, 
   ('Adriana', 'Peña', '+57 314 555 6666', 'a.pena@hotmail.com', 'Colombia', 'Nuevo', 'Forex', NULL, NULL, NULL),
   ('Diego', 'Salazar', '+56 9 3333 4444', NULL, 'Chile', 'Nuevo', 'Acciones', NULL, NULL, NULL),
   ('Valentina', 'Jiménez', '+34 666 777 888', 'v.jimenez@yahoo.com', 'España', 'Nuevo', 'Crypto', NULL, NULL, NULL),
-  ('Pablo', 'Medina', '+1 786 444 0005', NULL, 'USA', 'Nuevo', 'Desconocido', NULL, NULL, NULL);
+  ('Pablo', 'Medina', '+1 786 444 0005', NULL, 'USA', 'Nuevo', 'Desconocido', NULL, NULL, NULL),
+  ('Carlos', 'Quispe', '+51 987 111 222', 'c.quispe@gmail.com', 'Perú', 'Nuevo', 'Crypto', 'Lead Lima — campaña crypto', NULL, NULL),
+  ('María', 'Flores', '+51 956 333 444', 'm.flores@hotmail.com', 'Perú', 'En seguimiento', 'Índices', 'Interés S&P 500 CFD', 'f1111111-1111-1111-1111-111111111111', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
+  ('Jorge', 'Vargas', '+51 912 555 666', NULL, 'Perú', 'Contactado', 'Forex', 'Tipo de cambio USD/PEN', 'f3333333-3333-3333-3333-333333333333', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
+  ('Ana', 'Torres', '+51 998 777 888', 'a.torres@yahoo.com', 'Perú', 'Cerrado (FTD)', 'Crypto', 'FTD $250 — BCP', 'f3333333-3333-3333-3333-333333333333', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
 
 -- ============================================================
 -- PASO 6: Depósitos (FTD y Retención)

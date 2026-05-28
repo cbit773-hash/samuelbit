@@ -62,8 +62,12 @@ export function trackLeadConversion(leadData: {
   phone: string;
   email?: string;
   country: string;
+  lead_id?: string | null;
   utm_source?: string;
+  utm_medium?: string;
   utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
 }) {
   // 1. Push to GTM dataLayer (triggers conversion tag in GTM)
   pushToDataLayer('lead_form_submit', {
@@ -71,8 +75,12 @@ export function trackLeadConversion(leadData: {
     lead_phone: leadData.phone,
     lead_email: leadData.email || '',
     lead_country: leadData.country,
+    lead_id: leadData.lead_id || '',
     utm_source: leadData.utm_source || '',
+    utm_medium: leadData.utm_medium || '',
     utm_campaign: leadData.utm_campaign || '',
+    utm_content: leadData.utm_content || '',
+    utm_term: leadData.utm_term || '',
   });
 
   // 2. Fire Google Ads conversion directly via gtag

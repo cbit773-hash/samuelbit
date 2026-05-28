@@ -1,12 +1,174 @@
+@import '../public/design/variables.css';
+@import './styles/invest-semantic.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: #1a1d21;
 }
 
-body {
-  background-color: #050505;
-  color: #ffffff;
+body,
+#root {
+  min-height: 100%;
+  background-color: var(--surface-page-canvas, #1a1d21);
+  color: #f5f6f4;
+  font-family: var(--font-inter);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+
+@layer components {
+  .ip-input,
+  .bolt-input {
+    @apply w-full text-sm focus:outline-none transition-colors;
+    background-color: var(--surface-inset);
+    color: var(--color-foreground);
+    border: var(--shadow-subtle);
+    border-radius: var(--radius-inputs);
+    padding: 12px 16px;
+  }
+
+  .ip-input::placeholder,
+  .bolt-input::placeholder {
+    color: var(--color-muted-grey);
+  }
+
+  .ip-input:focus,
+  .bolt-input:focus {
+    box-shadow: var(--shadow-subtle-2);
+  }
+
+  .ip-btn-primary,
+  .bolt-btn-primary {
+    @apply inline-flex items-center justify-center font-semibold text-sm transition-colors active:scale-[0.98] disabled:opacity-50;
+    color: var(--color-on-primary);
+    background-color: var(--color-primary-conversion);
+    border-radius: var(--radius-buttons);
+    padding: 11px 24px;
+  }
+
+  .ip-btn-primary:hover:not(:disabled),
+  .bolt-btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+  }
+
+  .ip-btn-ghost,
+  .bolt-btn-ghost {
+    @apply inline-flex items-center justify-center font-medium text-sm bg-transparent transition-colors;
+    color: #f5f6f4;
+    padding: 11px 24px;
+    border-radius: var(--radius-buttons);
+  }
+
+  .ip-btn-ghost:hover,
+  .bolt-btn-ghost:hover {
+    color: var(--color-brand);
+    background-color: var(--surface-inset);
+  }
+
+  .ip-card-elevated,
+  .bolt-card-elevated {
+    background-color: var(--surface-elevated);
+    color: var(--color-foreground);
+    border: var(--shadow-subtle);
+    border-radius: var(--radius-cards);
+    padding: var(--card-padding, 1.5rem);
+  }
+
+  .bolt-card-form {
+    background-color: var(--surface-form-card);
+    color: var(--color-foreground-on-form);
+    border-radius: var(--radius-cards);
+    padding: var(--card-padding, 1.5rem);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  }
+
+  .ip-card-flat,
+  .bolt-card-flat {
+    border-radius: var(--radius-cards);
+    padding: var(--card-padding);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Contraste forzado en shells oscuros */
+[data-theme='invest-dark'] {
+  color: #f5f6f4;
+}
+
+[data-theme='invest-dark'] .text-foreground,
+[data-theme='invest-dark'] h1,
+[data-theme='invest-dark'] h2,
+[data-theme='invest-dark'] h3,
+[data-theme='invest-dark'] h4,
+[data-theme='invest-dark'] h5 {
+  color: #f5f6f4 !important;
+}
+
+[data-theme='invest-dark'] .text-muted {
+  color: #b0b5ad !important;
+}
+
+[data-theme='invest-dark'] nav a:not(.bolt-btn-primary) {
+  color: #d4d8d2;
+}
+
+[data-theme='invest-dark'] nav a:not(.bolt-btn-primary):hover {
+  color: #9fe870;
+}
+
+/* Formulario blanco en /registro — no heredar h2/p claros del shell oscuro */
+[data-theme='invest-dark'] .registro-form-light {
+  color: var(--color-foreground-on-form);
+}
+
+[data-theme='invest-dark'] .registro-form-light h1,
+[data-theme='invest-dark'] .registro-form-light h2,
+[data-theme='invest-dark'] .registro-form-light h3,
+[data-theme='invest-dark'] .registro-form-light h4 {
+  color: #0e0f0c !important;
+}
+
+[data-theme='invest-dark'] .registro-form-light .registro-text-body {
+  color: #454745 !important;
+}
+
+[data-theme='invest-dark'] .registro-form-light .registro-text-muted {
+  color: #5c6058 !important;
+}
+
+[data-theme='invest-dark'] .registro-form-light .registro-text-subtle {
+  color: #6b6f6b !important;
+}
+
+[data-theme='invest-dark'] .registro-form-light label {
+  color: #2d302c !important;
+}
+
+[data-theme='invest-dark'] .registro-form-light input,
+[data-theme='invest-dark'] .registro-form-light select {
+  color: #0e0f0c !important;
+}
+
+[data-theme='invest-dark'] .registro-form-light input::placeholder {
+  color: #6b6f6b !important;
 }

@@ -86,3 +86,22 @@ El Agente es el rol **más restringido** en cuanto a visibilidad horizontal. Viv
 6. **Cobro:** El cliente paga (FTD).
 7. **CRM:** Guarda la nota.
 8. **Loop:** El Dialer lanza el siguiente lead automáticamente en <15s.
+
+---
+
+## 6. Estado de implementación (código)
+
+| Herramienta | Estado | Notas |
+|-------------|--------|-------|
+| Auto-Dialer | Implementado | `useTwilioDialer` + cola RLS + historial `call_logs` |
+| FTD y comisiones | Implementado | `deposits` + comisión 8% MVP (`agent-commission.ts`) |
+| Callbacks | Implementado | Tabla `lead_callbacks` + RPC `agent_schedule_callback` |
+| Scripting | Implementado | `objection-scripts.ts` estático |
+| Botón SOS | Implementado | `sos_alerts` + notificaciones + Realtime supervisores |
+| Cobro rápido | Implementado | Edge `create-deposit-for-client` + lead `client_user_id` |
+| Leaderboard | Implementado | RPC `agent_team_leaderboard` |
+| CRM notas | Implementado | `updateMyLead` unificado |
+| KYC y Legal | Implementado | Copiar URLs + mailto + link KYC cliente |
+| Presencia | Implementado | `profiles.work_status` + RPC `set_my_work_status` |
+
+**E2E:** [`GUIA_AGENT_CLOSER_E2E.md`](GUIA_AGENT_CLOSER_E2E.md) · **Seed leads:** `supabase/scripts/seed_agent_demo_leads.sql`

@@ -12,7 +12,7 @@
 | **Presupuesto Total** | **$5,000,000 COP** (~$1,200 USD) |
 | **Duración Estimada** | **8 semanas** (2 meses) |
 | **Canales** | Google Search Ads, Google Display, YouTube Ads |
-| **Mercados Objetivo** | Colombia, México, Chile, Perú, España |
+| **Mercado Objetivo** | **Perú (100%)** — Lima y ciudades tier 2 |
 | **Costo Máximo por Lead (CPL)** | $4,000 - $6,000 COP |
 | **Tasa de Conversión Esperada** | Lead → FTD: **3-5%** |
 
@@ -241,7 +241,7 @@ URL Final: investpro.com/registro
 | 🇨🇴 **Colombia** | 35% | $800-1,500 COP | Mercado principal, CPCs baratos |
 | 🇲🇽 **México** | 30% | $1,200-2,000 COP | Mayor volumen de búsqueda |
 | 🇨🇱 **Chile** | 15% | $1,500-2,500 COP | Alto poder adquisitivo |
-| 🇵🇪 **Perú** | 10% | $800-1,200 COP | Mercado emergente crypto |
+| 🇵🇪 **Perú** | 100% | S/ 0.80-2.50 clic | BCP, plazo fijo, dólar, trading Lima, ETF CFD |
 | 🇪🇸 **España** | 10% | $2,000-4,000 COP | Alto ticket promedio FTD |
 
 ### Horarios de Mayor Conversión
@@ -265,20 +265,25 @@ Imagen: Screenshot del dashboard InvestPRO
 Trust Badges: "🔒 Regulado | ⚡ Retiros 24h | 🎧 Soporte 24/7"
 ```
 
-### Secciones de la Landing
-1. **Hero** — Propuesta de valor + CTA
-2. **3 Beneficios** — Iconos + texto corto (Seguridad, Soporte, Variedad)
-3. **Instrumentos** — Crypto / Forex / Acciones (tabs interactivos)
-4. **Testimonio Social** — "2,000+ traders activos" (social proof)
-5. **Formulario** — Nombre, Email, Teléfono, País (4 campos máx.)
-6. **FAQ** — 5 preguntas frecuentes (depósito mínimo, retiros, regulación)
-7. **Footer Legal** — Disclaimer de riesgo obligatorio
+### Landing de captación (`/registro`) — Diseño Fortrade (implementado)
+
+**URL de campañas:** `investpro.com/registro`
+
+| Capa | Detalle |
+|------|---------|
+| **Above the fold** | Fondo terminal desenfocado + tarjeta centrada (estilo Fortrade) |
+| **Paso 1** | Nombre, Apellido, Email, Teléfono con prefijo país (+57, +52, …) → CTA **EMPEZAR** |
+| **Paso 2** | Contraseña, confirmación, checkbox T&C + Privacidad + Riesgo → **CREAR CUENTA** |
+| **Below the fold** | Instrumentos, beneficios, FAQ, CTAs secundarios (SEO/quality score) |
+| **Compliance** | Banner `RiskDisclaimer` + links `/legal/*` en footer de la card |
+
+**Código:** `src/features/landing/pages/CaptacionLanding.tsx`, componentes en `src/features/landing/components/captacion/`
 
 ### Optimización del Formulario
-- **Máximo 4 campos**: Nombre, Email, Teléfono, País
-- **Auto-detectar país** con IP geolocation
-- **Botón CTA**: "EMPEZAR A INVERTIR" (no "Registrarse")
-- **Indicador de urgencia**: "Tu asesor te contactará en menos de 5 minutos"
+- **Paso 1 visible sin scroll** en mobile (objetivo CVR Google Ads)
+- **Teléfono E.164** normalizado al registrar (compatible con dialer Twilio)
+- **UTM** → `interest` en lead según `utm_campaign`
+- **Botón paso 1:** "EMPEZAR" · **Paso 2:** "CREAR CUENTA"
 
 ---
 

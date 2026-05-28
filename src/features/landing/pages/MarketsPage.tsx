@@ -1,5 +1,6 @@
-import { Navbar } from "../components/Navbar";
+import { MarketingNavbar } from "../components/marketing/MarketingNavbar";
 import { Footer } from "../components/Footer";
+import { MarketingShell } from "../../../shared/layout/MarketingShell";
 import { TickerTape } from "../components/TickerTape";
 import { LineChart, Globe, DollarSign, Bitcoin, Activity, BarChart2, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -69,26 +70,26 @@ export function MarketsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background font-sans selection:bg-primary/30">
-      <Navbar />
+    <MarketingShell>
+      <MarketingNavbar />
       <TickerTape />
       
       {/* Hero Section */}
-      <div className="relative pt-24 pb-20 border-b border-white/5 overflow-hidden">
+      <div className="relative pt-24 pb-20 border-b border-border overflow-hidden">
         <div className="absolute top-0 right-0 w-full max-w-2xl h-[400px] bg-primary/10 blur-[120px] rounded-full pointer-events-none translate-x-1/3 -translate-y-1/2" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
-              Explora los Mercados Financieros con <span className="text-primary">InvestPRO</span>
+            <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tight mb-6">
+              Explora los Mercados Financieros con <span className="text-brand">InvestPRO</span>
             </h1>
-            <p className="text-xl text-gray-400 leading-relaxed mb-10">
+            <p className="text-xl text-muted leading-relaxed mb-10">
               Obtén acceso directo a la liquidez global institucional. Opera más de 12,000 instrumentos financieros a través de múltiples clases de activos con ejecución ultrarrápida y spreads desde 0.0 pips.
             </p>
             <div className="flex justify-center gap-4">
-              <Link to="/auth/login" className="bg-primary hover:bg-amber-600 text-background font-bold px-8 py-3.5 rounded-full transition-all active:scale-95 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+              <Link to="/registro" className="bolt-btn-primary px-8 py-3.5">
                 Abrir Cuenta Real
               </Link>
-              <a href="#asset-classes" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded-full transition-all">
+              <a href="#asset-classes" className="bolt-btn-ghost border border-border px-8 py-3.5">
                 Ver Instrumentos
               </a>
             </div>
@@ -97,24 +98,24 @@ export function MarketsPage() {
       </div>
 
       {/* Market Data Strip */}
-      <div className="bg-[#050505] py-8 border-b border-white/5">
+      <div className="bg-background py-8 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/10">
             <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Volumen Diario</p>
-              <p className="text-2xl font-bold text-white">$12.5B+</p>
+              <p className="text-muted text-sm font-medium mb-1">Volumen Diario</p>
+              <p className="text-2xl font-bold text-foreground">$12.5B+</p>
             </div>
             <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Instrumentos Disponibles</p>
-              <p className="text-2xl font-bold text-white">12,000+</p>
+              <p className="text-muted text-sm font-medium mb-1">Instrumentos Disponibles</p>
+              <p className="text-2xl font-bold text-foreground">12,000+</p>
             </div>
             <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Velocidad de Ejecución</p>
+              <p className="text-muted text-sm font-medium mb-1">Velocidad de Ejecución</p>
               <p className="text-2xl font-bold text-emerald-500">~12ms</p>
             </div>
             <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Proveedores de Liquidez</p>
-              <p className="text-2xl font-bold text-white">Tier-1 Banks</p>
+              <p className="text-muted text-sm font-medium mb-1">Proveedores de Liquidez</p>
+              <p className="text-2xl font-bold text-foreground">Tier-1 Banks</p>
             </div>
           </div>
         </div>
@@ -128,59 +129,59 @@ export function MarketsPage() {
               
               {/* Content */}
               <div className="flex-1">
-                <div className="inline-block p-4 bg-white/5 rounded-2xl border border-white/10 mb-6">
+                <div className="inline-block p-4 bg-surface-alt rounded-2xl border border-border mb-6">
                   {asset.icon}
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{asset.title}</h2>
-                <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">{asset.title}</h2>
+                <p className="text-lg text-muted mb-8 leading-relaxed">
                   {asset.description}
                 </p>
                 
                 <ul className="space-y-3 mb-8">
                   {asset.highlights.map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-gray-300">
+                    <li key={i} className="flex items-center gap-3 text-foreground">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                       {item}
                     </li>
                   ))}
                 </ul>
                 
-                <Link to="/auth/login" className="inline-flex items-center gap-2 text-primary font-bold hover:text-amber-400 transition-colors">
+                <Link to="/registro" className="inline-flex items-center gap-2 text-brand font-bold hover:text-brand-hover transition-colors">
                   Comenzar a operar {asset.title} <ArrowRight size={18} />
                 </Link>
               </div>
 
               {/* Data Display Mockup */}
               <div className="flex-1 w-full">
-                <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 shadow-2xl relative overflow-hidden group">
+                <div className="bg-surface rounded-2xl border border-border p-6 relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[50px] rounded-full group-hover:bg-primary/10 transition-colors" />
                   
-                  <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-4">
-                    <h3 className="text-white font-bold flex items-center gap-2">
-                      <LineChart size={18} className="text-gray-500" />
+                  <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
+                    <h3 className="text-foreground font-bold flex items-center gap-2">
+                      <LineChart size={18} className="text-muted" />
                       Condiciones en Vivo
                     </h3>
                     <span className="text-xs bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded font-mono">Mercado Abierto</span>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="grid grid-cols-3 text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2">
+                    <div className="grid grid-cols-3 text-xs text-muted font-semibold uppercase tracking-wider mb-2">
                       <div>Instrumento</div>
                       <div className="text-right">Spread Mínimo</div>
                       <div className="text-right">Apalancamiento</div>
                     </div>
                     
                     {asset.sampleSpreads.map((spread, i) => (
-                      <div key={i} className="grid grid-cols-3 items-center p-3 bg-white/[0.02] rounded-xl hover:bg-white/[0.04] transition-colors border border-transparent hover:border-white/5">
-                        <div className="font-bold text-white">{spread.pair}</div>
+                      <div key={i} className="grid grid-cols-3 items-center p-3 bg-surface-alt rounded-xl hover:bg-surface-info transition-colors border border-transparent hover:border-border">
+                        <div className="font-bold text-foreground">{spread.pair}</div>
                         <div className="text-right text-emerald-400 font-mono text-sm">{spread.spread}</div>
-                        <div className="text-right text-gray-400 font-mono text-sm">1:{asset.id === 'crypto' ? '100' : '500'}</div>
+                        <div className="text-right text-muted font-mono text-sm">1:{asset.id === 'crypto' ? '100' : '500'}</div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-white/5 text-center">
-                    <p className="text-xs text-gray-500">
+                  <div className="mt-6 pt-4 border-t border-border text-center">
+                    <p className="text-xs text-muted">
                       Los spreads mostrados son indicativos y pueden variar dependiendo de la liquidez del mercado.
                     </p>
                   </div>
@@ -193,19 +194,19 @@ export function MarketsPage() {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-t from-[#020202] to-[#0a0a0a] py-24 border-t border-white/5 text-center">
+      <div className="bg-surface-alt py-24 border-t border-border text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-white mb-6">¿Listo para aprovechar las oportunidades del mercado?</h2>
-          <p className="text-gray-400 text-lg mb-10">
+          <h2 className="text-4xl font-bold text-foreground mb-6">¿Listo para aprovechar las oportunidades del mercado?</h2>
+          <p className="text-muted text-lg mb-10">
             Únete a la plataforma elegida por traders institucionales y profesionales. Abre tu cuenta en minutos.
           </p>
-          <Link to="/auth/login" className="inline-block bg-primary hover:bg-amber-600 text-background font-bold text-lg px-10 py-4 rounded-full transition-all active:scale-95 shadow-[0_0_30px_rgba(245,158,11,0.3)]">
+          <Link to="/registro" className="inline-block bolt-btn-primary text-lg px-10 py-4">
             Crea tu Cuenta Ahora
           </Link>
         </div>
       </div>
 
       <Footer />
-    </div>
+    </MarketingShell>
   );
 }
