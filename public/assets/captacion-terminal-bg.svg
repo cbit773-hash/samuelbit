@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="50%" style="stop-color:#0d1f3c"/>
+      <stop offset="100%" style="stop-color:#030712"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <!-- Watchlist panel -->
+  <rect x="40" y="80" width="320" height="920" rx="8" fill="#0f1a2e" opacity="0.9"/>
+  <rect x="60" y="120" width="120" height="12" rx="2" fill="#1e3a5f"/>
+  <rect x="60" y="160" width="280" height="8" rx="2" fill="#152238"/>
+  <rect x="60" y="190" width="200" height="8" rx="2" fill="#1a3050"/>
+  <rect x="60" y="220" width="240" height="8" rx="2" fill="#152238"/>
+  <rect x="60" y="250" width="180" height="8" rx="2" fill="#22c55e" opacity="0.4"/>
+  <rect x="60" y="280" width="220" height="8" rx="2" fill="#ef4444" opacity="0.35"/>
+  <!-- Chart area -->
+  <rect x="400" y="80" width="1480" height="700" rx="8" fill="#0a1220" opacity="0.85"/>
+  <polyline points="420,650 520,580 620,620 720,480 820,520 920,380 1020,420 1120,300 1220,350 1320,280 1420,320 1520,200 1620,250 1720,180 1820,220" fill="none" stroke="#22d3ee" stroke-width="3" opacity="0.5"/>
+  <polyline points="420,700 600,680 800,720 1000,650 1200,680 1400,600 1600,640 1800,580" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.35"/>
+  <!-- Bottom panel -->
+  <rect x="400" y="800" width="1480" height="200" rx="8" fill="#0c1525" opacity="0.8"/>
+  <rect x="420" y="840" width="200" height="24" rx="4" fill="#f59e0b" opacity="0.25"/>
+</svg>
