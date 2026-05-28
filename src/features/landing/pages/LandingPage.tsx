@@ -1,23 +1,41 @@
-import { Navbar } from "../components/Navbar";
-import { TickerTape } from "../components/TickerTape";
-import { HeroSection } from "../components/HeroSection";
-import { BenefitsSection } from "../components/BenefitsSection";
-import { AdvancedToolsSection } from "../components/AdvancedToolsSection";
-import { WhatWeOfferSection } from "../components/WhatWeOfferSection";
-import { Footer } from "../components/Footer";
+import { darkUi } from '../../../shared/theme/dark-ui';
+import { TickerTape } from '../components/TickerTape';
+import { BenefitsSection } from '../components/BenefitsSection';
+import { WhatWeOfferSection } from '../components/WhatWeOfferSection';
+import { RiskDisclaimer } from '../../../shared/components/RiskDisclaimer';
+import { MarketingShell } from '../../../shared/layout/MarketingShell';
+import {
+  MarketingNavbar,
+  MarketingFooter,
+  LandingHero,
+  TrustStatsBar,
+  MarketsSection,
+  TerminalShowcase,
+  StepsTimeline,
+  FaqSection,
+  CtaBand,
+  StickyCtaBar,
+} from '../components/marketing';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-background font-sans selection:bg-primary/30">
-      <Navbar />
+    <MarketingShell>
+      <MarketingNavbar />
       <TickerTape />
-      <main>
-        <HeroSection />
+      <main className={`${darkUi.bgPage} ${darkUi.textPrimary}`}>
+        <LandingHero />
+        <TrustStatsBar />
+        <MarketsSection />
+        <TerminalShowcase />
         <BenefitsSection />
-        <AdvancedToolsSection />
         <WhatWeOfferSection />
+        <StepsTimeline />
+        <FaqSection />
+        <CtaBand />
       </main>
-      <Footer />
-    </div>
+      <MarketingFooter />
+      <StickyCtaBar />
+      <RiskDisclaimer />
+    </MarketingShell>
   );
 }

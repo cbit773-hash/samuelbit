@@ -1,5 +1,6 @@
 // ============================================================
-// INVESPRO — Servicio de Wallet (Supabase)
+// INVESPRO — Servicio de Wallet (Supabase — lectura + aprobación)
+// Mutaciones de depósito/retiro vía Edge Functions / RPCs
 // ============================================================
 import { supabase } from '../client';
 
@@ -11,6 +12,9 @@ export interface Wallet {
   total_deposited: number;
   total_withdrawn: number;
   is_frozen: boolean;
+  account_mode?: 'live' | 'demo' | null;
+  demo_balance?: number | null;
+  leverage?: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -28,6 +32,8 @@ export interface Transaction {
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
   external_id: string | null;
   external_url: string | null;
+  invoice_id: string | null;
+  payment_id: string | null;
   gateway: string | null;
   crypto_address: string | null;
   crypto_txid: string | null;
@@ -40,7 +46,6 @@ export interface Transaction {
 
 // ─── Wallet Queries ──────────────────────────────────────────
 
-/** Obtener la wallet del usuario autenticado */
 export async function getMyWallet(): Promise<Wallet | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
@@ -49,25 +54,77 @@ export async function getMyWallet(): Promise<Wallet | null> {
     .from('wallets')
     .select('*')
     .eq('client_id', user.id)
-    .single();
+    .maybeSingle();
 
-  if (error) { console.error('[Wallet] Error:', error); return null; }
-  return data as Wallet;
+  if (error) {
+    console.error('[Wallet] Error:', error);
+    throw new Error(error.message);
+  }
+  return data as Wallet | null;
 }
 
-/** Obtener wallet por client_id (para HEAD/CHIEF) */
+/** Crea la fila en wallets si falta (RPC SECURITY DEFINER) y devuelve el registro */
+export async function ensureMyWallet(): Promise<Wallet | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { error: rpcError } = await supabase.rpc('ensure_my_wallet');
+  if (rpcError) {
+    console.error('[Wallet] ensure_my_wallet:', rpcError);
+    throw new Error(rpcError.message);
+  }
+
+  return getMyWallet();
+}
+
+/** Garantiza wallet + lectura (fuente única para el área cliente) */
+export async function getMyWalletOrCreate(): Promise<Wallet | null> {
+  const existing = await getMyWallet();
+  if (existing) {
+    await ensureDemoFunds();
+    return getMyWallet();
+  }
+  const w = await ensureMyWallet();
+  if (w) await ensureDemoFunds();
+  return getMyWallet();
+}
+
+export async function ensureDemoFunds(): Promise<void> {
+  const { error } = await supabase.rpc('ensure_demo_funds');
+  if (error) console.error('[Wallet] ensure_demo_funds:', error);
+}
+
+export async function switchAccountMode(
+  mode: 'demo' | 'live',
+): Promise<{ account_mode: string; demo_balance: number; balance: number } | null> {
+  const { data, error } = await supabase.rpc('switch_account_mode', { p_mode: mode });
+  if (error) {
+    console.error('[Wallet] switch_account_mode:', error);
+    throw new Error(error.message);
+  }
+  return data as { account_mode: string; demo_balance: number; balance: number };
+}
+
+export async function resetDemoAccount(): Promise<boolean> {
+  const { data, error } = await supabase.rpc('reset_demo_account');
+  if (error) {
+    console.error('[Wallet] reset_demo_account:', error);
+    return false;
+  }
+  return !!(data as { ok?: boolean })?.ok;
+}
+
 export async function getWalletByClient(clientId: string): Promise<Wallet | null> {
   const { data, error } = await supabase
     .from('wallets')
     .select('*')
     .eq('client_id', clientId)
-    .single();
+    .maybeSingle();
 
   if (error) { console.error('[Wallet] Error:', error); return null; }
-  return data as Wallet;
+  return data as Wallet | null;
 }
 
-/** Obtener todas las wallets (HEAD) */
 export async function getAllWallets(): Promise<Wallet[]> {
   const { data, error } = await supabase
     .from('wallets')
@@ -80,7 +137,6 @@ export async function getAllWallets(): Promise<Wallet[]> {
 
 // ─── Transaction Queries ─────────────────────────────────────
 
-/** Obtener transacciones del usuario autenticado */
 export async function getMyTransactions(): Promise<Transaction[]> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return [];
@@ -95,7 +151,6 @@ export async function getMyTransactions(): Promise<Transaction[]> {
   return (data || []) as Transaction[];
 }
 
-/** Obtener todas las transacciones (HEAD/CHIEF) */
 export async function getAllTransactions(): Promise<Transaction[]> {
   const { data, error } = await supabase
     .from('transactions')
@@ -106,165 +161,57 @@ export async function getAllTransactions(): Promise<Transaction[]> {
   return (data || []) as Transaction[];
 }
 
-/** Obtener transacciones pendientes */
 export async function getPendingTransactions(): Promise<Transaction[]> {
   const { data, error } = await supabase
     .from('transactions')
     .select('*')
-    .eq('status', 'pending')
+    .in('status', ['pending', 'processing'])
     .order('created_at', { ascending: false });
 
   if (error) { console.error('[Transactions] Error:', error); return []; }
   return (data || []) as Transaction[];
 }
 
-// ─── Transaction Mutations ───────────────────────────────────
+// ─── Leadership actions (Edge Function) ──────────────────────
 
-/** Crear solicitud de depósito */
-export async function createDepositRequest(params: {
-  amount: number;
-  payment_method: string;
-  gateway: string;
-  external_id?: string;
-  external_url?: string;
-  crypto_address?: string;
-  crypto_network?: string;
-  notes?: string;
-}): Promise<Transaction | null> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-
-  // Get or create wallet
-  let wallet = await getMyWallet();
-  if (!wallet) {
-    const { data: newWallet } = await supabase
-      .from('wallets')
-      .insert({ client_id: user.id })
-      .select()
-      .single();
-    wallet = newWallet as Wallet;
-  }
-  if (!wallet) return null;
-
-  const fee = params.gateway === 'stripe' ? params.amount * 0.029 + 0.30 : 0;
-  const net_amount = params.amount - fee;
-
-  const { data, error } = await supabase
-    .from('transactions')
-    .insert({
-      wallet_id: wallet.id,
-      client_id: user.id,
-      type: 'deposit',
-      amount: params.amount,
-      fee: Math.round(fee * 100) / 100,
-      net_amount: Math.round(net_amount * 100) / 100,
-      payment_method: params.payment_method,
-      status: params.gateway === 'manual' ? 'pending' : 'processing',
-      gateway: params.gateway,
-      external_id: params.external_id || null,
-      external_url: params.external_url || null,
-      crypto_address: params.crypto_address || null,
-      crypto_network: params.crypto_network || null,
-      notes: params.notes || null,
-    })
-    .select()
-    .single();
-
-  if (error) { console.error('[Transactions] Create error:', error); return null; }
-  return data as Transaction;
-}
-
-/** Crear solicitud de retiro */
-export async function createWithdrawalRequest(params: {
-  amount: number;
-  payment_method: string;
-  crypto_address?: string;
-  crypto_network?: string;
-  notes?: string;
-}): Promise<Transaction | null> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-
-  const wallet = await getMyWallet();
-  if (!wallet || wallet.balance < params.amount) return null;
-  if (wallet.is_frozen) return null;
-
-  const { data, error } = await supabase
-    .from('transactions')
-    .insert({
-      wallet_id: wallet.id,
-      client_id: user.id,
-      type: 'withdrawal',
-      amount: params.amount,
-      fee: 0,
-      net_amount: params.amount,
-      payment_method: params.payment_method,
-      status: 'pending',
-      gateway: 'manual',
-      crypto_address: params.crypto_address || null,
-      crypto_network: params.crypto_network || null,
-      notes: params.notes || null,
-    })
-    .select()
-    .single();
-
-  if (error) { console.error('[Transactions] Withdrawal error:', error); return null; }
-  return data as Transaction;
-}
-
-/** Aprobar transacción (HEAD/CHIEF) — acredita en wallet */
 export async function approveTransaction(txId: string): Promise<boolean> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
+  const { data, error } = await supabase.functions.invoke('approve-transaction', {
+    body: { transaction_id: txId, action: 'approve' },
+  });
 
-  // Get the transaction
-  const { data: tx } = await supabase.from('transactions').select('*').eq('id', txId).single();
-  if (!tx) return false;
-
-  // Update transaction status
-  const { error: txErr } = await supabase
-    .from('transactions')
-    .update({ status: 'completed', approved_by: user.id, completed_at: new Date().toISOString() })
-    .eq('id', txId);
-  if (txErr) return false;
-
-  // Update wallet balance
-  if (tx.type === 'deposit') {
-    const { error: wErr } = await supabase.rpc('increment_wallet_balance', {
-      p_wallet_id: tx.wallet_id,
-      p_amount: tx.net_amount,
-    });
-    // Fallback if RPC doesn't exist
-    if (wErr) {
-      await supabase
-        .from('wallets')
-        .update({ 
-          balance: (await getWalletByClient(tx.client_id))!.balance + Number(tx.net_amount),
-          total_deposited: (await getWalletByClient(tx.client_id))!.total_deposited + Number(tx.net_amount),
-        })
-        .eq('id', tx.wallet_id);
-    }
-  } else if (tx.type === 'withdrawal') {
-    const wallet = await getWalletByClient(tx.client_id);
-    if (wallet) {
-      await supabase
-        .from('wallets')
-        .update({ 
-          balance: wallet.balance - Number(tx.amount),
-          total_withdrawn: wallet.total_withdrawn + Number(tx.amount),
-        })
-        .eq('id', tx.wallet_id);
-    }
+  if (error) {
+    console.error('[approve-transaction]', error);
+    return false;
   }
 
-  return true;
+  return !!(data as { success?: boolean })?.success;
 }
 
-/** Rechazar transacción */
-export async function rejectTransaction(txId: string): Promise<boolean> {
-  const { error } = await supabase
-    .from('transactions')
-    .update({ status: 'failed', completed_at: new Date().toISOString() })
-    .eq('id', txId);
-  return !error;
+export async function rejectTransaction(txId: string, reason?: string): Promise<boolean> {
+  const { data, error } = await supabase.functions.invoke('approve-transaction', {
+    body: { transaction_id: txId, action: 'reject', reason },
+  });
+
+  if (error) {
+    console.error('[reject-transaction]', error);
+    return false;
+  }
+
+  return !!(data as { success?: boolean })?.success;
+}
+
+/**
+ * @deprecated Use initiateCryptoDeposit / initiateManualDeposit from payment.service
+ */
+export async function createDepositRequest(): Promise<Transaction | null> {
+  console.warn('[Wallet] createDepositRequest is deprecated — use payment.service');
+  return null;
+}
+
+/**
+ * @deprecated Use initiateWithdrawal from payment.service
+ */
+export async function createWithdrawalRequest(): Promise<Transaction | null> {
+  console.warn('[Wallet] createWithdrawalRequest is deprecated — use payment.service');
+  return null;
 }

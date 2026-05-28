@@ -1,37 +1,49 @@
 # Credenciales de Acceso - InvestPRO
 
-## Modo 1: Simulación RBAC (Instantánea - Sin Supabase)
+La simulación RBAC (botones de 7 niveles en login) fue **retirada**. Solo hay acceso con usuarios reales en Supabase Auth.
 
-Haz clic en **"Mostrar Accesos de Simulación RBAC (7 Niveles)"** en la pantalla de login para desplegar los botones de acceso rápido. Este modo **no requiere conexión a Supabase** — establece el rol directamente en la aplicación.
+## Clientes (inversores)
 
-| Rol | Botón | Dashboard |
-| :--- | :--- | :--- |
-| **HEAD** | Head (Súper Admin) | Centro de Comando Global |
-| **CHIEF** | Chief | Monitoreo de Depósitos y Leads |
-| **MANAGER** | Manager | Metas y Capacitación |
-| **FLOOR_MANAGER** | Floor Manager | Supervisión de Mesas |
-| **TEAM_LEADER** | Team Leader | Gestión de Agentes |
-| **AGENT** | Agente | Dialer y Ventas |
-| **CLIENT** | Cliente (Inversor) | Terminal de Trading |
+1. Ir a **`/registro`** y completar el formulario.
+2. Guardar la contraseña generada en pantalla (no se envía por email).
+3. Iniciar sesión en **`/auth/login`** con ese correo y contraseña.
+4. Panel: **`/dashboard/trade`** (terminal) · Cuenta: **`/dashboard/account?tab=resumen`**
 
----
+## Personal (HEAD, CHIEF, AGENT, etc.)
 
-## Modo 2: Login Real (Requiere Supabase)
+### Desarrollo rápido (7 roles @investpro.com)
 
-Para usar el formulario de correo/contraseña, el usuario debe estar registrado en Supabase Auth.
+Ver **`docs/USUARIOS_PRUEBA_INVESTPRO.md`** — contraseña `Dev2026!Inv`, script `npm run seed:dev-users` y SQL post-seed.
 
-**Contraseña de cuentas demo:** `InvestPRO2026!`
+### Alta manual
 
-| Correo | Rol |
-| :--- | :--- |
-| `client@investpro.com` | CLIENT |
-| `agent@investpro.com` | AGENT |
-| `teamleader@investpro.com` | TEAM_LEADER |
-| `floormanager@investpro.com` | FLOOR_MANAGER |
-| `manager@investpro.com` | MANAGER |
-| `chief@investpro.com` | CHIEF |
-| `head@investpro.com` | HEAD |
+1. Crear usuario en **Supabase Dashboard → Authentication → Users** (email + contraseña).
+2. Tras el primer login, la app ejecuta `ensure_my_profile` y crea fila en `profiles`.
+3. Asignar rol en SQL (ver `docs/GUIA_STAFF_AUTH.md`):
 
-> [!IMPORTANT]
-> Estos usuarios deben existir en Supabase Auth. Si no existen, usa primero el Modo 1 (Simulación) para navegar la app. Para registrar usuarios reales, usa la función `signUp` del store de autenticación.
+```sql
+UPDATE public.profiles SET role = 'HEAD' WHERE email = 'tu@correo.com';
+```
 
+Roles válidos: `CLIENT`, `AGENT`, `TEAM_LEADER`, `FLOOR_MANAGER`, `MANAGER`, `CHIEF`, `HEAD`.
+
+## Recuperación de contraseña
+
+- **`/auth/recuperar`** — solicitar enlace por email
+- **`/auth/restablecer`** — definir nueva contraseña (redirect configurado en Supabase Auth)
+
+## Variables de entorno requeridas
+
+```env
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=...
+VITE_APP_URL=http://localhost:5173
+```
+
+## No usar en producción
+
+- **`supabase/seed_data.sql`** — borra datos y rompe FK con `auth.users`. Solo para entornos de demo aislados.
+
+## Vaciar todo y empezar de cero
+
+- **`supabase/scripts/reset_all_operational_data.sql`** — ver `docs/RESET_DATOS_OPERATIVOS.md`

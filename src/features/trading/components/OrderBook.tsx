@@ -44,12 +44,12 @@ export function OrderBook() {
   }, [currentPrice]);
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl flex flex-col h-full shadow-xl">
-      <div className="p-4 border-b border-white/10">
-        <h3 className="text-white font-bold text-sm">Libro de Órdenes</h3>
+    <div className="bg-surface-alt border border-border rounded-2xl flex flex-col h-full shadow-xl">
+      <div className="p-4 border-b border-border">
+        <h3 className="text-foreground font-bold text-sm">Libro de Órdenes</h3>
       </div>
       
-      <div className="flex text-xs text-gray-500 font-semibold px-4 py-2 border-b border-white/5">
+      <div className="flex text-xs text-muted font-semibold px-4 py-2 border-b border-border">
         <div className="flex-1">Precio (USDT)</div>
         <div className="flex-1 text-right">Cantidad (BTC)</div>
         <div className="flex-1 text-right">Total</div>
@@ -59,29 +59,29 @@ export function OrderBook() {
         {/* Asks (Vendedores - Rojo) */}
         <div className="flex-1 flex flex-col justify-end space-y-[2px]">
           {asks.map((ask, i) => (
-            <div key={`ask-${i}`} className="flex hover:bg-white/5 cursor-pointer relative group">
+            <div key={`ask-${i}`} className="flex hover:bg-surface-inset cursor-pointer relative group">
               <div className="absolute right-0 top-0 bottom-0 bg-rose-500/10 z-0 transition-all" style={{ width: `${Math.random() * 100}%` }}></div>
               <div className="flex-1 text-rose-500 relative z-10 pl-2">{ask.price}</div>
-              <div className="flex-1 text-right text-gray-300 relative z-10">{ask.amount}</div>
-              <div className="flex-1 text-right text-gray-500 relative z-10 pr-2">{ask.total}</div>
+              <div className="flex-1 text-right text-foreground relative z-10">{ask.amount}</div>
+              <div className="flex-1 text-right text-muted relative z-10 pr-2">{ask.total}</div>
             </div>
           ))}
         </div>
 
         {/* Current Price spread */}
-        <div className="py-2 text-center text-lg font-bold text-white border-y border-white/5 my-1 bg-[#050505]">
+        <div className="py-2 text-center text-lg font-bold text-foreground border-y border-border my-1 bg-background">
           {currentPrice ? currentPrice.toFixed(2) : '---'}
-          <span className="text-xs text-gray-500 ml-2 font-sans font-normal">Spread: 0.1</span>
+          <span className="text-xs text-muted ml-2 font-sans font-normal">Spread: 0.1</span>
         </div>
 
         {/* Bids (Compradores - Verde) */}
         <div className="flex-1 flex flex-col space-y-[2px]">
           {bids.map((bid, i) => (
-            <div key={`bid-${i}`} className="flex hover:bg-white/5 cursor-pointer relative group">
+            <div key={`bid-${i}`} className="flex hover:bg-surface-inset cursor-pointer relative group">
               <div className="absolute right-0 top-0 bottom-0 bg-emerald-500/10 z-0 transition-all" style={{ width: `${Math.random() * 100}%` }}></div>
               <div className="flex-1 text-emerald-500 relative z-10 pl-2">{bid.price}</div>
-              <div className="flex-1 text-right text-gray-300 relative z-10">{bid.amount}</div>
-              <div className="flex-1 text-right text-gray-500 relative z-10 pr-2">{bid.total}</div>
+              <div className="flex-1 text-right text-foreground relative z-10">{bid.amount}</div>
+              <div className="flex-1 text-right text-muted relative z-10 pr-2">{bid.total}</div>
             </div>
           ))}
         </div>

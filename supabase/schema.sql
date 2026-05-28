@@ -125,6 +125,21 @@ CREATE TABLE public.positions (
 -- PARTE 3: ROW LEVEL SECURITY (RLS)
 -- ============================================================
 
+CREATE OR REPLACE FUNCTION public.get_my_role()
+RETURNS TEXT
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE r TEXT;
+BEGIN
+  SET LOCAL row_security = off;
+  SELECT role::text INTO r FROM public.profiles WHERE id = auth.uid();
+  RETURN r;
+END;
+$$;
+
 ALTER TABLE public.profiles  ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.teams     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.leads     ENABLE ROW LEVEL SECURITY;
@@ -132,18 +147,11 @@ ALTER TABLE public.deposits  ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.positions ENABLE ROW LEVEL SECURITY;
 
 -- ── PROFILES ──────────────────────────────────────────────
--- Cada usuario ve su propio perfil
-CREATE POLICY "ver_propio_perfil"
-  ON public.profiles FOR SELECT
-  USING (auth.uid() = id);
-
--- Alta Dirección ve TODOS los perfiles
-CREATE POLICY "alta_direccion_ve_todos_perfiles"
-  ON public.profiles FOR ALL
-  USING (
-    (SELECT role FROM public.profiles WHERE id = auth.uid())
-    IN ('HEAD', 'CHIEF', 'MANAGER', 'FLOOR_MANAGER', 'TEAM_LEADER')
-  );
+-- Solo fila propia. Staff lista/edita vía RPCs (migración 202605310001).
+CREATE POLICY profiles_own_row
+  ON public.profiles FOR ALL TO authenticated
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
 
 -- ── LEADS ──────────────────────────────────────────────────
 -- Agentes solo ven sus leads asignados
@@ -155,8 +163,7 @@ CREATE POLICY "agente_ve_sus_leads"
 CREATE POLICY "liderazgo_ve_todos_leads"
   ON public.leads FOR ALL
   USING (
-    (SELECT role FROM public.profiles WHERE id = auth.uid())
-    IN ('HEAD', 'CHIEF', 'MANAGER', 'FLOOR_MANAGER', 'TEAM_LEADER')
+    public.get_my_role() IN ('HEAD', 'CHIEF', 'MANAGER', 'FLOOR_MANAGER', 'TEAM_LEADER')
   );
 
 -- ── DEPOSITS ───────────────────────────────────────────────
@@ -173,10 +180,7 @@ CREATE POLICY "agente_ve_sus_cierres"
 -- Alta Dirección ve y gestiona todos los depósitos
 CREATE POLICY "liderazgo_gestiona_depositos"
   ON public.deposits FOR ALL
-  USING (
-    (SELECT role FROM public.profiles WHERE id = auth.uid())
-    IN ('HEAD', 'CHIEF', 'MANAGER')
-  );
+  USING (public.get_my_role() IN ('HEAD', 'CHIEF', 'MANAGER'));
 
 -- ── POSITIONS ──────────────────────────────────────────────
 -- El cliente ve solo sus posiciones de trading
@@ -191,18 +195,26 @@ CREATE POLICY "cliente_ve_sus_posiciones"
 
 -- Auto-crear perfil cuando un usuario se registra con Supabase Auth
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
   INSERT INTO public.profiles (id, email, full_name, role)
   VALUES (
-    new.id,
-    new.email,
-    COALESCE(new.raw_user_meta_data->>'full_name', 'Usuario InvesPro'),
-    COALESCE((new.raw_user_meta_data->>'role')::user_role, 'CLIENT')
-  );
-  RETURN new;
+    NEW.id,
+    COALESCE(NEW.email, ''),
+    COALESCE(NEW.raw_user_meta_data->>'full_name', 'Usuario InvestPRO'),
+    COALESCE((NEW.raw_user_meta_data->>'role')::user_role, 'CLIENT')
+  )
+  ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  RAISE WARNING 'handle_new_user error: %', SQLERRM;
+  RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

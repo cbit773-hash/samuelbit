@@ -27,7 +27,7 @@ export function RiskDisclaimer() {
   return (
     <div
       id="risk-disclaimer"
-      className="fixed bottom-0 left-0 right-0 z-[9999] bg-[#0a0a0f]/95 backdrop-blur-xl border-t border-rose-500/20 shadow-[0_-4px_30px_rgba(239,68,68,0.1)]"
+      className="fixed bottom-0 left-0 right-0 z-[9999] bg-surface-alt/95 backdrop-blur border-t border-danger/40 shadow-lg"
       style={{ animation: 'slideUp 0.5s ease-out' }}
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-start md:items-center gap-3">
@@ -38,18 +38,18 @@ export function RiskDisclaimer() {
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] md:text-xs text-gray-300 leading-relaxed">
-            <strong className="text-rose-400">⚠️ Advertencia de Riesgo:</strong>{' '}
+          <p className="text-[11px] md:text-xs text-foreground leading-relaxed">
+            <strong className="text-rose-400">⚠︝ Advertencia de Riesgo:</strong>{' '}
             Los CFDs y criptomonedas son instrumentos complejos con alto riesgo de pérdida rápida de capital debido al apalancamiento. 
             Opere solo con capital que pueda permitirse perder. Rendimientos pasados no garantizan resultados futuros.{' '}
-            <Link to="/legal/terminos" className="text-amber-500 hover:underline font-medium">T&C</Link>{' · '}
-            <Link to="/legal/privacidad" className="text-amber-500 hover:underline font-medium">Privacidad</Link>
+            <Link to="/legal/terminos" className="text-brand hover:underline font-medium">T&C</Link>{' · '}
+            <Link to="/legal/privacidad" className="text-brand hover:underline font-medium">Privacidad</Link>
           </p>
         </div>
 
         <button
           onClick={handleDismiss}
-          className="shrink-0 p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-white transition-colors"
+          className="shrink-0 p-1.5 rounded-lg hover:bg-surface-inset text-muted hover:text-foreground transition-colors"
           aria-label="Cerrar advertencia de riesgo"
         >
           <X size={16} />

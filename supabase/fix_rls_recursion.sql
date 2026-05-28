@@ -1,4 +1,5 @@
 -- ============================================================
+-- DEPRECATED — Usar migración 202605310001_profiles_rls_canonical.sql
 -- INVESPRO — FIX DEFINITIVO: Recursión Infinita en RLS
 -- Pega TODO esto en Supabase → SQL Editor → New Query → Run
 -- ============================================================

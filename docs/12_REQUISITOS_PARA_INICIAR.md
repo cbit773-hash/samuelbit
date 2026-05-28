@@ -32,28 +32,36 @@
 | Módulo de Depósitos | ✅ Conectado | Crear, aprobar, rechazar desde BD |
 | Dashboard HEAD | ✅ En vivo | KPIs, personal, leads, depósitos desde Supabase |
 | Dashboard CHIEF | ✅ En vivo | Validación de caja + auditoría SLA |
-| Landing page de captación | ✅ Lista | Ruta `/registro`, formulario → Supabase + UTM tracking |
-| Sistema de Wallet | ✅ Schema + Servicio | Tablas `wallets`, `transactions`, `crypto_addresses` + RLS |
-| Arquitectura de pagos | ✅ Documentado | NOWPayments (Crypto) + Stripe + Manual (`docs/13_PASARELA_DE_PAGOS.md`) |
-| Servicios de datos | ✅ Completos | 6 servicios: profiles, leads, deposits, positions, teams, wallet |
+| Landing page de captación | ✅ Lista | Ruta `/registro`, registro Auth + onboarding RPC + UTM tracking |
+| Registro cliente (Auth + wallet) | ✅ Hecho (código) | — | `registerClient`, RPC `complete_client_onboarding` · `docs/GUIA_REGISTRO_AUTH.md` |
+| Recuperación de contraseña | ✅ Hecho (código) | — | `/auth/recuperar`, `/auth/restablecer` · ver `docs/GUIA_REGISTRO_AUTH.md` |
+| Sistema de Wallet | ✅ En vivo | Tablas `wallets`, `transactions` + RPCs atómicas + RLS fail-closed |
+| Integración NOWPayments (código) | ✅ Implementado | Edge Functions: `create-deposit`, `nowpayments-webhook`, `approve-transaction` |
+| UI Wallet ClientAccountPage | ✅ Conectada | Balance real, depósito crypto/manual, retiros, historial (`/dashboard/account?tab=...`) |
+| Panel transacciones CHIEF | ✅ Conectado | Aprobar/rechazar depósitos manuales y retiros desde `transactions` |
+| Arquitectura de pagos | ✅ Documentado | NOWPayments + Manual — ver `docs/GUIA_NOWPAYMENTS.md` |
+| Servicios de datos | ✅ Completos | 6 servicios: profiles, leads, deposits, positions, teams, wallet + `payment.service` |
 | Hooks de Supabase | ✅ Listos | `useSupabaseQuery` + `useSupabaseMutation` genéricos |
 | Tipos TypeScript | ✅ Listos | `database.types.ts` con todos los tipos del schema |
 | Plan de mercadeo | ✅ Documentado | Google Ads $5M COP, 8 semanas (`docs/11_PLAN_MERCADEO_GOOGLE_ADS.md`) |
+| Dashboard Agent → Supabase | ✅ Hecho | — | 10 herramientas Arsenal · migración `202605370001_agent_closer_ops.sql` · `docs/GUIA_AGENT_CLOSER_E2E.md` |
+| Dialer VoIP Twilio (código) | ✅ Hecho | — | `AgentDialerPanel` + `useTwilioDialer` · requiere secrets Twilio · `docs/GUIA_TWILIO_VOIP.md` |
+| Leads demo agente dev | ✅ Script | — | `supabase/scripts/seed_agent_demo_leads.sql` tras `seed:dev-users` |
+| Dashboard Client → Trading | ✅ Hecho | — | `useClientPositions`, terminal abre/cierra en BD, portafolio y KPIs en ClientDashboard |
+| Sistema de notificaciones | ✅ Hecho (código) | — | Resend + tabla `notifications` + Edge Functions · ver `docs/GUIA_NOTIFICACIONES.md` (falta API key Resend) |
+| KYC / Verificación de identidad | ✅ Hecho (código) | — | Storage `kyc-documents`, 4 docs, RPC approve/reject, UI Cliente + CHIEF · SQL `202605230001_kyc.sql` |
+| Reportes exportables (CSV/PDF) | ✅ Hecho | — | CHIEF → Reporte conciliación: CSV transacciones/depositos + PDF |
+| WebSocket tiempo real | ✅ Hecho | — | Binance WS + reconexión + badge live; Realtime notificaciones + toast |
+| Documentos legales (T&C, Privacidad, Riesgo) | ✅ Publicados | — | `/legal/terminos`, `/legal/privacidad`, `/legal/riesgos` + banner `RiskDisclaimer` · `docs/LEGAL_PUBLICACION.md` |
 
 ### 1.2 Lo que FALTA por implementar 🔧
 
 | Componente | Prioridad | Esfuerzo | Detalle |
 |-----------|-----------|----------|---------|
-| Integración API NOWPayments | 🔴 Crítica | 3-5 días | Crear invoices crypto, webhook de confirmación |
-| UI de Wallet en ClientDashboard | 🔴 Crítica | 3 días | Balance, historial, botón depositar/retirar |
-| Panel de transacciones CHIEF | 🔴 Crítica | 2 días | Aprobar/rechazar depósitos con acreditación a wallet |
-| Dialer VoIP (Twilio) | 🔴 Crítica | 2 semanas | Llamadas desde el dashboard del agente |
-| Dashboard Agent → Supabase | 🟡 Alta | 3 días | Conectar leads propios del agente a BD |
-| Dashboard Client → Supabase | 🟡 Alta | 3 días | Conectar depósitos y posiciones del cliente |
-| Sistema de notificaciones | 🟡 Alta | 1 semana | Email transaccional (Resend/SendGrid) |
-| KYC / Verificación de identidad | 🟡 Alta | 2 semanas | Subida de documentos + aprobación manual |
-| Reportes exportables (CSV/PDF) | 🟢 Media | 1 semana | Para conciliación financiera |
-| WebSocket tiempo real | 🟢 Media | 1 semana | Precios en vivo, notificaciones push |
+| Cuenta NOWPayments + API keys | 🔴 Crítica | 1-2 días | Registro, API key, wallet USDT TRC20, IPN secret → `docs/GUIA_NOWPAYMENTS.md` Fase 1 |
+| Deploy NOWPayments en producción | 🔴 Crítica | 1 día | Secrets, Edge Functions, `.env` frontend → `docs/GUIA_NOWPAYMENTS.md` Fases 2-5 |
+| Cuenta Twilio + deploy dialer VoIP | 🔴 Crítica | 1-2 días | Número, API Key, TwiML App, secrets, deploy → `docs/GUIA_TWILIO_VOIP.md` |
+
 
 ### 1.3 Servicios a Contratar (Día 1)
 
@@ -68,7 +76,8 @@
 | Datos de mercado | Binance WS + CoinGecko | $0 | Precios crypto en vivo |
 | Monitoreo | Sentry Free + Uptime Robot | $0 | Alertas si algo falla |
 | Repositorio de código | GitHub Free | $0 | Control de versiones |
-| **TOTAL INFRA MES 1** | | **$114,700** | |
+| construccion de codigo | cursor | $278000 | Control de versiones |
+| **TOTAL INFRA MES 1** | | **$398,000** | |
 
 ---
 
@@ -111,10 +120,10 @@
 
 | Requisito | Costo Estimado (COP) | Tiempo | Detalle |
 |-----------|----------------------|--------|---------|
-| Registro de SAS (Sociedad por Acciones Simplificada) | $500,000 - $1,200,000 | 1-2 semanas | Constitución en Cámara de Comercio |
-| RUT (Registro Único Tributario) | $0 | 1-3 días | Automático con la SAS en la DIAN |
-| Cuenta bancaria empresarial | $0 | 1-2 semanas | Bancolombia, Davivienda, etc. |
-| Facturación electrónica | $50,000 - $150,000/año | 3-5 días | Obligatorio en Colombia (Siigo, Alegra) |
+| Registro de SAC (Sociedad Anónima Cerrada) | S/ 1,500 - 3,500 | 1-2 semanas | SUNARP + notaría |
+| RUC (SUNAT) | $0 | 1-3 días | Tras inscripción societaria |
+| Cuenta bancaria empresarial | $0 | 1-2 semanas | BCP, Interbank (CCI PEN y USD) |
+| Facturación electrónica | S/ 200 - 600/mes | 3-5 días | Nubefact, Alegra PE, etc. |
 | Registro de marca (opcional) | $800,000 - $1,200,000 | 4-6 meses | SIC — proteger nombre "InvestPRO" |
 | Asesoría jurídica inicial | $500,000 - $1,500,000 | 1 semana | Revisión de T&C, disclaimers, contratos |
 | **TOTAL LEGAL** | **$1,500,000 - $3,000,000** | | Inversión única |
@@ -123,14 +132,15 @@
 
 | Documento | Estado | Prioridad |
 |-----------|--------|-----------|
-| Términos y Condiciones | 📝 Crear | 🔴 Antes del lanzamiento |
-| Política de Privacidad (Ley 1581 de 2012) | 📝 Crear | 🔴 Antes del lanzamiento |
-| Disclaimer de Riesgo de Inversión | 📝 Crear | 🔴 En cada página |
+| Términos y Condiciones | ✅ Publicado | — | `/legal/terminos` |
+| Política de Privacidad (Ley 29733 — Perú) | ✅ Publicado | — | `/legal/privacidad` |
+| Guías Perú (mercado, pagos, AML) | ✅ Publicado | — | `GUIA_PERU_*.md` |
+| Disclaimer de Riesgo de Inversión | ✅ Publicado | — | `/legal/riesgos` + banner en landing, login y dashboards |
 | Contrato de Prestación de Servicios (agentes) | 📝 Crear | 🟡 Antes de contratar |
 | Política AML/KYC | 📝 Crear | 🟡 Antes de los primeros FTDs |
 
 > [!WARNING]
-> **Sin estos documentos no debes lanzar públicamente.** Google Ads requiere T&C y disclaimer para aprobar anuncios de servicios financieros.
+> **Revisión jurídica externa recomendada** antes de campañas masivas (razón social, NIT, porcentajes de pérdida). Google Ads requiere T&C y disclaimer para servicios financieros — ya publicados en la web.
 
 ---
 
@@ -159,7 +169,8 @@
 - [x] Google Tag Manager instalado ✅ (GTM-XXXXXXX en `index.html` — reemplazar con ID real)
 - [x] Pixel de conversión en el formulario ✅ (`trackLeadConversion()` en `/registro`)
 - [x] Página de T&C y Privacidad en el footer ✅ (`/legal/terminos` + `/legal/privacidad`)
-- [x] Disclaimer de riesgo visible ✅ (Banner sticky + footer + formulario)
+- [x] Página de Advertencia de Riesgo ✅ (`/legal/riesgos`)
+- [x] Disclaimer de riesgo visible ✅ (Banner sticky + footer + formulario + dashboards)
 - [ ] Verificación de Google Ads para servicios financieros
 - [ ] Cuenta de Google Ads creada y configurada
 - [ ] Método de pago (tarjeta de crédito o débito)
@@ -203,7 +214,7 @@
 | 2 | Contratar Supabase Pro ($25 USD/mes) | Dev |
 | 3 | Configurar email corporativo (Zoho/Google) | Dev |
 | 3 | Ejecutar `schema.sql` + `seed_data.sql` en Supabase | Dev |
-| 4-5 | Conectar pasarela de pago (Stripe/Crypto) | Dev |
+| 4-5 | Deploy pasarela NOWPayments (Fases 1-5 de `docs/GUIA_NOWPAYMENTS.md`) | Dev |
 | 5-7 | Crear Landing Page de captación | Dev + Diseñador |
 | 7-10 | Documentos legales (T&C, Privacidad, Disclaimers) | Abogado |
 | 10-14 | Configurar Google Ads + Google Tag Manager | Chief/Media Buyer |
@@ -235,9 +246,9 @@
 ### Legal ⚖️
 - [ ] SAS constituida y RUT activo
 - [ ] Cuenta bancaria empresarial abierta
-- [ ] Términos y Condiciones publicados en la web
-- [ ] Política de Privacidad publicada
-- [ ] Disclaimer de riesgo en landing y plataforma
+- [x] Términos y Condiciones publicados en la web (`/legal/terminos`) ✅
+- [x] Política de Privacidad publicada (`/legal/privacidad`) ✅
+- [x] Disclaimer de riesgo en landing y plataforma (`/legal/riesgos` + `RiskDisclaimer`) ✅
 - [ ] Contratos de prestación de servicios para agentes
 
 ### Técnico 💻
@@ -247,7 +258,12 @@
 - [x] Landing page con formulario → Supabase (`/registro`) ✅
 - [x] Schema de wallet y transacciones creado ✅
 - [x] Servicios de wallet implementados (depositar, retirar, aprobar) ✅
-- [ ] Pasarela de pago integrada (NOWPayments API key + webhook)
+- [x] Código NOWPayments: Edge Functions + RPCs + UI cliente/CHIEF ✅
+- [x] Migraciones SQL aplicadas en Supabase ✅
+- [ ] Cuenta NOWPayments + API key + USDT TRC20 + IPN (`GUIA_NOWPAYMENTS.md` Fase 1)
+- [ ] Secrets Supabase + Edge Functions deploy (Fases 2-3)
+- [ ] IPN URL en NOWPayments Dashboard
+- [ ] Prueba E2E: depósito crypto $10 → wallet acreditada (Fase 5)
 - [ ] Email corporativo configurado (5 cuentas mín.)
 - [x] Google Tag Manager + pixel de conversión ✅
 - [ ] SSL activo (HTTPS)
@@ -269,7 +285,9 @@
 
 ### Operativo 🎯
 - [x] CRM probado: crear lead, asignar, cambiar estado, cerrar FTD ✅
-- [x] Flujo de depósito probado: crear → verificar → aprobar ✅
+- [x] Flujo depósito CRM legacy: crear → verificar → aprobar (tabla `deposits`) ✅
+- [x] Flujo wallet: depósito manual → CHIEF aprueba → balance acreditado ✅
+- [ ] Flujo wallet crypto: depósito NOWPayments → webhook IPN → balance acreditado (requiere deploy)
 - [ ] Reportes de conciliación funcionando
 - [ ] Plan de comisiones definido para agentes
 - [ ] Protocolo de escalación (agente → floor → chief → head)
@@ -284,7 +302,8 @@
 | Pocos leads se convierten en FTD | Media | Alto | Mejorar script, capacitación agresiva, A/B test landing |
 | Falla técnica en producción | Media | Alto | 2 devs en standby, monitoreo 24/7 con Sentry |
 | Agentes no cierran ventas | Media | Alto | Floor Manager supervisa en vivo, coaching diario |
-| Problemas con pasarela de pago | Baja | Crítico | Tener 2 pasarelas (Stripe + Crypto como backup) |
+| Problemas con pasarela de pago | Baja | Crítico | NOWPayments crypto + depósito manual como backup; Stripe en Fase 2 |
+| Webhook IPN no acredita saldo | Media | Crítico | Ver `docs/GUIA_NOWPAYMENTS.md` Fase 6 — HMAC, secrets, logs webhook |
 | Base de datos comprometida | Baja | Crítico | RLS activo, backups diarios, VPN para acceso admin |
 
 ---
@@ -304,5 +323,30 @@
 
 ---
 
-*Documento de requisitos — InvestPRO — Actualizado 14 de Mayo 2026*
-*Basado en docs: 10_COSTOS_OPERATIVOS, 11_PLAN_MERCADEO_GOOGLE_ADS, 13_PASARELA_DE_PAGOS*
+## 10. PASARELA DE PAGOS — NOWPayments
+
+| Estado | Detalle |
+|--------|---------|
+| Código + UI | ✅ Implementado en el repo |
+| SQL en Supabase | ✅ Migraciones aplicadas |
+| Cuenta NOWPayments + deploy | 🔧 Pendiente |
+
+**Guía paso a paso (empezar aquí):** [`docs/GUIA_NOWPAYMENTS.md`](GUIA_NOWPAYMENTS.md)
+
+| Fase | Contenido |
+|------|-----------|
+| 0 | SQL / verificación |
+| 1 | Cuenta NOWPayments + API + USDT + IPN |
+| 2 | Secrets Supabase |
+| 3 | Deploy Edge Functions |
+| 4 | `.env` frontend |
+| 5 | Prueba E2E |
+| 6 | Troubleshooting |
+
+**Referencia técnica:** [`supabase/PAYMENTS_DEPLOY.md`](../supabase/PAYMENTS_DEPLOY.md)  
+**Arquitectura:** [`docs/13_PASARELA_DE_PAGOS.md`](13_PASARELA_DE_PAGOS.md)
+
+---
+
+*Documento de requisitos — InvestPRO — Actualizado 20 de Mayo 2026*
+*Basado en: 10_COSTOS, 11_MERCADEO, 13_PASARELA, GUIA_NOWPAYMENTS*

@@ -3,22 +3,22 @@
 > Análisis detallado de la infraestructura, servicios y costos mensuales para operar la plataforma InvestPRO en producción.
 > **Moneda:** Pesos Colombianos (COP). Tasa de referencia: **1 USD = $3.700 COP**.
 
----
+--
 
 ## 1. Resumen Ejecutivo
 
 | Concepto | Costo Mensual (COP) |
 |:---|---:|
-| Infraestructura (Hosting + Base de Datos) | $0 – $1.295.100 |
-| Servicios de terceros (APIs de datos) | $0 – $925.000 |
-| Comunicaciones (Dialer VoIP + Email) | $0 – $1.147.700 |
-| Dominio + Email corporativo | $7.400 – $133.200 |
-| Herramientas de desarrollo | $0 – $148.000 |
-| Talento Humano (2 Devs Junior) | $3.600.000 – $5.000.000 |
-| **Total Demo/MVP** | **$11.100/mes** |
-| **Total Producción Inicial (sin devs)** | **~$688.400/mes** |
-| **Total Producción Inicial (con devs)** | **~$5.288.400/mes** |
-| **Total Producción Escalada (con devs)** | **~$8.441.600/mes** |
+| Infraestructura (Hosting + Base de Datos) | $0 – $1.554.120 |
+| Servicios de terceros (APIs de datos) | $0 – $1.110.000 |
+| Comunicaciones (Dialer VoIP + Email) | $0 – $1.377.240 |
+| Dominio + Email corporativo | $8.880 – $159.840 |
+| Herramientas de desarrollo | $0 – $177.600 |
+| Talento Humano (2 Devs Junior) | $4.320.000 – $6.000.000 |
+| **Total Demo/MVP** | **$13.320/mes** |
+| **Total Producción Inicial (sin devs)** | **~$826.080/mes** |
+| **Total Producción Inicial (con devs)** | **~$6.346.080/mes** |
+| **Total Producción Escalada (con devs)** | **~$10.129.920/mes** |
 
 ---
 
@@ -33,23 +33,23 @@
 | Plan | Precio/mes (USD) | Precio/mes (COP) | ¿Qué incluye? | ¿Para quién? |
 |:---|---:|---:|:---|:---|
 | **Free** | $0 | $0 | 500MB de base de datos, 1GB de archivos, 50.000 usuarios registrados, 500.000 llamadas a funciones | Desarrollo, demos y pruebas internas |
-| **Pro** | $25 | $92.500 | 8GB de base de datos, 100GB de archivos, 100.000 usuarios, 2 millones de llamadas a funciones, backups diarios | Operación real con hasta 200 clientes |
-| **Team** | $599 | $2.216.300 | 16GB de base de datos, 200GB de archivos, soporte prioritario, certificación SOC2 para cumplimiento regulatorio | Operación regulada con más de 200 clientes |
+| **Pro** | $25 | $111.000 | 8GB de base de datos, 100GB de archivos, 100.000 usuarios, 2 millones de llamadas a funciones, backups diarios | Operación real con hasta 200 clientes |
+| **Team** | $599 | $2.659.560 | 16GB de base de datos, 200GB de archivos, soporte prioritario, certificación SOC2 para cumplimiento regulatorio | Operación regulada con más de 200 clientes |
 
 **¿Qué pasa si superas los límites del plan Pro?**
 
 | Recurso | Incluido en Pro | Costo por excedente |
 |:---|:---|:---|
-| Base de datos | 8GB | $462/GB adicional ($0.125 USD) |
-| Almacenamiento de archivos | 100GB | $78/GB adicional ($0.021 USD) |
-| Transferencia de datos (bandwidth) | 250GB | $333/GB adicional ($0.09 USD) |
-| Funciones edge | 2 millones | $7.400 por millón adicional |
-| Conexiones en tiempo real (WebSocket) | 500 simultáneas | $37.000 por cada 1.000 adicionales |
+| Base de datos | 8GB | $554/GB adicional ($0.125 USD) |
+| Almacenamiento de archivos | 100GB | $94/GB adicional ($0.021 USD) |
+| Transferencia de datos (bandwidth) | 250GB | $400/GB adicional ($0.09 USD) |
+| Funciones edge | 2 millones | $8.880 por millón adicional |
+| Conexiones en tiempo real (WebSocket) | 500 simultáneas | $44.400 por cada 1.000 adicionales |
 
 **Estimación real para InvestPRO:**
 - **Demo (5 personas probando):** $0/mes — el plan Free es más que suficiente
-- **50 clientes + 20 empleados:** $92.500/mes (Pro, sin excedentes)
-- **500 clientes + 30 empleados:** $92.500 + ~$111.000 excedentes = **$203.500/mes**
+- **50 clientes + 20 empleados:** $111.000/mes (Pro, sin excedentes)
+- **500 clientes + 30 empleados:** $111.000 + ~$133.200 excedentes = **$244.200/mes**
 
 ---
 
@@ -63,14 +63,14 @@
 |:---|:---|---:|:---|
 | **Cloudflare Pages** | Free | $0 | Bandwidth ILIMITADO, builds ilimitados, CDN global, SSL automático |
 | **Vercel** | Hobby | $0 | 100GB bandwidth, ideal para proyectos personales |
-| **Vercel** | Pro | $74.000 | 1TB bandwidth, analytics, protección DDoS avanzada |
+| **Vercel** | Pro | $88.800 | 1TB bandwidth, analytics, protección DDoS avanzada |
 | **Netlify** | Free | $0 | 100GB bandwidth, 300 minutos de build/mes |
 
-**Recomendación:** **Cloudflare Pages (GRATIS)** — ofrece bandwidth ilimitado y CDN global sin costo. Solo necesitas Vercel Pro ($74.000) si requieres analytics avanzados.
+**Recomendación:** **Cloudflare Pages (GRATIS)** — ofrece bandwidth ilimitado y CDN global sin costo. Solo necesitas Vercel Pro ($88.800) si requieres analytics avanzados.
 
 **Estimación:**
 - **Demo y producción inicial:** $0/mes (Cloudflare Pages)
-- **Producción con analytics:** $74.000/mes (Vercel Pro)
+- **Producción con analytics:** $88.800/mes (Vercel Pro)
 
 ---
 
@@ -83,7 +83,7 @@
 | Proveedor | Precio/mes (COP) | ¿Qué incluye? |
 |:---|---:|:---|
 | **Cloudflare Free** | $0 | CDN global, DNS rápido, protección DDoS básica, SSL |
-| **Cloudflare Pro** | $74.000 | Todo lo anterior + WAF (firewall de aplicación), optimización de imágenes |
+| **Cloudflare Pro** | $88.800 | Todo lo anterior + WAF (firewall de aplicación), optimización de imágenes |
 
 **Recomendación:** Cloudflare Free es suficiente hasta 10.000 usuarios diarios.
 
@@ -99,13 +99,13 @@
 |:---|---:|:---|:---|
 | **Binance WebSocket** | $0 | Crypto: precios en vivo, velas, volumen | TickerTape (barra de precios), gráfico de velas |
 | **CoinGecko Free** | $0 | Crypto: 30 calls/min, datos históricos | Página de Mercados, info de monedas |
-| **CoinGecko Analyst** | $51.800 | Crypto: 500 calls/min, datos premium | Si necesitas más velocidad |
-| **CoinGecko Pro** | $477.300 | Crypto: ilimitado, datos institucionales | Operación de alto volumen |
-| **Twelve Data** | $0 – $292.300 | Forex + Stocks + Crypto | Si expandes a Forex (EUR/USD, GBP/USD) |
+| **CoinGecko Analyst** | $62.160 | Crypto: 500 calls/min, datos premium | Si necesitas más velocidad |
+| **CoinGecko Pro** | $572.760 | Crypto: ilimitado, datos institucionales | Operación de alto volumen |
+| **Twelve Data** | $0 – $350.760 | Forex + Stocks + Crypto | Si expandes a Forex (EUR/USD, GBP/USD) |
 
 **Estimación:**
 - **Solo Crypto:** $0/mes (Binance WS + CoinGecko Free dan todo lo necesario)
-- **Crypto + Forex:** $181.300 – $292.300/mes (Twelve Data)
+- **Crypto + Forex:** $217.560 – $350.760/mes (Twelve Data)
 
 ---
 
@@ -119,24 +119,24 @@
 
 | Concepto | Precio (COP) |
 |:---|---:|
-| Número telefónico (por mes) | $3.700/número |
-| Llamada saliente (por minuto) | $48/minuto |
-| Llamada entrante (por minuto) | $4/minuto |
+| Número telefónico (por mes) | $4.440/número |
+| Llamada saliente (por minuto) | $58/minuto |
+| Llamada entrante (por minuto) | $5/minuto |
 
 **Cálculo para un equipo de 10 agentes:**
 ```
 10 agentes × 10 llamadas/día × 5 min/llamada × 22 días hábiles = 11.000 minutos/mes
-11.000 min × $48/min = $528.000/mes
-+ 10 números telefónicos × $3.700 = $37.000/mes
-Total: ~$565.000/mes
+11.000 min × $58/min = $638.000/mes
++ 10 números telefónicos × $4.440 = $44.400/mes
+Total: ~$682.400/mes
 ```
 
 **Cálculo para 30 agentes:**
 ```
 30 agentes × 10 llamadas/día × 5 min/llamada × 22 días = 33.000 minutos/mes
-33.000 min × $48/min = $1.584.000/mes
-+ 30 números × $3.700 = $111.000/mes
-Total: ~$1.695.000/mes
+33.000 min × $58/min = $1.914.000/mes
++ 30 números × $4.440 = $133.200/mes
+Total: ~$2.047.200/mes
 ```
 
 > [!IMPORTANT]
@@ -156,11 +156,11 @@ Total: ~$1.695.000/mes
 
 | Concepto | Precio (COP) |
 |:---|---:|
-| SMS a Colombia | $11/mensaje |
-| SMS a México | $22/mensaje |
-| SMS a Argentina | $30/mensaje |
+| SMS a Colombia | $13/mensaje |
+| SMS a México | $26/mensaje |
+| SMS a Argentina | $36/mensaje |
 
-**Estimación (500 SMS/mes):** $5.500 – $15.000/mes
+**Estimación (500 SMS/mes):** $6.600 – $18.000/mes
 
 ### 4.3 Email Transaccional — Correos automáticos
 
@@ -169,7 +169,7 @@ Total: ~$1.695.000/mes
 | Proveedor | Precio/mes (COP) | Límite |
 |:---|---:|:---|
 | **Resend Free** | $0 | 100 emails/día (3.000/mes) |
-| **Resend Pro** | $74.000 | 50.000 emails/mes |
+| **Resend Pro** | $88.800 | 50.000 emails/mes |
 | **SendGrid Free** | $0 | 100 emails/día |
 
 **Estimación:** $0/mes — el plan free de Resend cubre las necesidades hasta 100+ clientes activos.
@@ -184,11 +184,11 @@ Total: ~$1.695.000/mes
 
 | Concepto | Precio/año (COP) | Proveedor |
 |:---|---:|:---|
-| Dominio `.com` | $44.400 – $55.500 | Namecheap, Cloudflare, Google |
-| Dominio `.co` | $111.000 – $148.000 | Más caro por ser Colombia |
+| Dominio `.com` | $53.280 – $66.600 | Namecheap, Cloudflare, Google |
+| Dominio `.co` | $133.200 – $177.600 | Más caro por ser Colombia |
 | SSL (candado verde) | $0 | Incluido gratis en Cloudflare/Vercel |
 
-**Estimación prorrateada:** $3.700 – $12.300/mes
+**Estimación prorrateada:** $4.440 – $14.760/mes
 
 ### 5.2 Email Corporativo — Correos @investpro.com
 
@@ -196,13 +196,13 @@ Total: ~$1.695.000/mes
 
 | Proveedor | Precio/usuario/mes (COP) | ¿Qué incluye? |
 |:---|---:|:---|
-| **Google Workspace** | $26.640 | Gmail + Drive + Meet + 30GB |
-| **Zoho Mail** | $3.700 | Email + 5GB almacenamiento |
-| **Titan (Namecheap)** | $7.030 | Email + calendario |
+| **Google Workspace** | $31.968 | Gmail + Drive + Meet + 30GB |
+| **Zoho Mail** | $4.440 | Email + 5GB almacenamiento |
+| **Titan (Namecheap)** | $8.436 | Email + calendario |
 
 **Estimación (5 cuentas corporativas):**
-- Google Workspace: 5 × $26.640 = **$133.200/mes**
-- Zoho Mail: 5 × $3.700 = **$18.500/mes**
+- Google Workspace: 5 × $31.968 = **$159.840/mes**
+- Zoho Mail: 5 × $4.440 = **$22.200/mes**
 
 ---
 
@@ -211,20 +211,20 @@ Total: ~$1.695.000/mes
 | Herramienta | ¿Qué hace? | Precio/mes (COP) |
 |:---|:---|---:|
 | **GitHub Free** | Almacena el código fuente, control de versiones | $0 |
-| **GitHub Team** | Repositorios privados con más funciones para equipos | $14.800/desarrollador |
+| **GitHub Team** | Repositorios privados con más funciones para equipos | $17.760/desarrollador |
 | **Sentry Free** | Detecta y reporta errores en producción automáticamente | $0 |
-| **Sentry Team** | Más eventos, alertas avanzadas | $96.200 |
+| **Sentry Team** | Más eventos, alertas avanzadas | $115.440 |
 | **PostHog** | Analytics de producto (qué hacen los usuarios en la app) | $0 (10K eventos/mes) |
 | **Uptime Robot** | Te avisa por email/SMS si la plataforma se cae | $0 (50 monitores) |
 
-**Estimación:** $0 – $148.000/mes
+**Estimación:** $0 – $177.600/mes
 
 ---
 
 ## 7. Talento Humano — Equipo de Mantenimiento Técnico
 
 > [!IMPORTANT]
-> Este es el **costo fijo más significativo** de la operación. Sin desarrolladores dedicados, la plataforma no recibe actualizaciones de seguridad, corrección de bugs ni nuevas funcionalidades.
+> Este es el **costo fijo más significativo** de la operación. Sin desarrolladores dedicados, la plataforma no recibe actualizaciones de seguridad, corrección de bugs ni nuevas funcionalidades. Las cifras incluyen el **+20% de margen técnico** acordado para el programador principal.
 
 ### 7.1 ¿Por qué se necesitan 2 Desarrolladores Junior?
 
@@ -243,21 +243,21 @@ La plataforma InvestPRO tiene 7 dashboards con más de 70 módulos interactivos,
 
 | Concepto | Dev Junior #1 (COP) | Dev Junior #2 (COP) |
 |:---|---:|---:|
-| **Salario base mensual** | $1.800.000 | $1.800.000 |
-| Prestaciones sociales (~52%) | $936.000 | $936.000 |
-| **Costo total empleador/mes** | **$2.736.000** | **$2.736.000** |
+| **Salario base mensual** | $2.160.000 | $2.160.000 |
+| Prestaciones sociales (~52%) | $1.123.200 | $1.123.200 |
+| **Costo total empleador/mes** | **$3.283.200** | **$3.283.200** |
 
-> **Total 2 Juniors (contrato laboral):** **$5.472.000/mes**
+> **Total 2 Juniors (contrato laboral):** **$6.566.400/mes**
 
 **Alternativa: Contratación por prestación de servicios (freelance):**
 
 | Modalidad | Dev Junior #1 | Dev Junior #2 | Total |
 |:---|---:|---:|---:|
-| **Prestación de servicios** | $2.000.000 | $2.000.000 | **$4.000.000/mes** |
-| **Medio tiempo (4h/día)** | $1.200.000 | $1.200.000 | **$2.400.000/mes** |
+| **Prestación de servicios** | $2.400.000 | $2.400.000 | **$4.800.000/mes** |
+| **Medio tiempo (4h/día)** | $1.440.000 | $1.440.000 | **$2.880.000/mes** |
 
 > [!TIP]
-> **Recomendación:** Iniciar con 2 juniors por prestación de servicios ($4.000.000/mes total) y migrar a contrato laboral cuando la operación supere los 200 clientes.
+> **Recomendación:** Iniciar con 2 juniors por prestación de servicios ($4.800.000/mes total) y migrar a contrato laboral cuando la operación supere los 200 clientes.
 
 ### 7.3 Perfil Técnico Requerido
 
@@ -282,12 +282,12 @@ Para desarrollo, pruebas internas y presentaciones a inversionistas.
 | Supabase | Plan Free | $0 |
 | Hosting | Cloudflare Pages (gratis) | $0 |
 | Datos de mercado | Binance WS + CoinGecko Free | $0 |
-| Dominio | `.com` prorrateado | $3.700 |
-| Email | Zoho Mail (2 cuentas) | $7.400 |
+| Dominio | `.com` prorrateado | $4.440 |
+| Email | Zoho Mail (2 cuentas) | $8.880 |
 | Dialer | No necesario en demo | $0 |
 | SSL | Gratis (Cloudflare) | $0 |
 | Desarrolladores | No necesario en demo | $0 |
-| **TOTAL** | | **$11.100/mes** |
+| **TOTAL** | | **$13.320/mes** |
 
 ---
 
@@ -297,20 +297,20 @@ Primera operación real con equipo pequeño.
 
 | Servicio | Detalle | COP/mes |
 |:---|:---|---:|
-| Supabase | Plan Pro | $92.500 |
+| Supabase | Plan Pro | $111.000 |
 | Hosting | Cloudflare Pages | $0 |
 | CDN | Cloudflare Free | $0 |
 | Datos de mercado | Binance WS + CoinGecko Free | $0 |
-| Dialer VoIP | Twilio (10 agentes, ~11K min) | $565.000 |
-| SMS | ~300 mensajes | $3.300 |
+| Dialer VoIP | Twilio (10 agentes, ~11K min) | $682.400 |
+| SMS | ~300 mensajes | $3.960 |
 | Email transaccional | Resend Free | $0 |
-| Dominio | `.com` | $3.700 |
-| Email corporativo | Zoho Mail (5 cuentas) | $18.500 |
+| Dominio | `.com` | $4.440 |
+| Email corporativo | Zoho Mail (5 cuentas) | $22.200 |
 | GitHub | Free | $0 |
 | Monitoreo | Sentry Free + Uptime Robot | $0 |
-| **Subtotal Infraestructura** | | **$683.000/mes** |
-| 2 Devs Junior (Prest. Servicios) | Mantenimiento y soporte | $4.000.000 |
-| **TOTAL CON EQUIPO** | | **$4.683.000/mes** |
+| **Subtotal Infraestructura** | | **$819.600/mes** |
+| 2 Devs Junior (Prest. Servicios) | Mantenimiento y soporte | $4.800.000 |
+| **TOTAL CON EQUIPO** | | **$5.619.600/mes** |
 
 ---
 
@@ -320,20 +320,20 @@ Operación completa con múltiples mesas, Forex incluido.
 
 | Servicio | Detalle | COP/mes |
 |:---|:---|---:|
-| Supabase | Pro + excedentes (~$55 USD) | $203.500 |
-| Hosting | Vercel Pro (analytics) | $74.000 |
-| CDN | Cloudflare Pro (WAF) | $74.000 |
-| Datos de mercado | Twelve Data (Forex + Crypto) | $292.300 |
-| Dialer VoIP | Twilio (30 agentes, ~33K min) | $1.695.000 |
-| SMS | ~1.500 mensajes | $16.500 |
-| Email transaccional | Resend Pro | $74.000 |
-| Dominio | `.com` | $3.700 |
-| Email corporativo | Google Workspace (15 cuentas) | $399.600 |
-| GitHub Team | 3 desarrolladores | $44.400 |
-| Monitoreo | Sentry Team | $96.200 |
-| **Subtotal Infraestructura** | | **$2.973.200/mes** |
-| 2 Devs Junior (Contrato laboral) | Mantenimiento, nuevas features | $5.472.000 |
-| **TOTAL CON EQUIPO** | | **$8.445.200/mes** |
+| Supabase | Pro + excedentes (~$55 USD) | $244.200 |
+| Hosting | Vercel Pro (analytics) | $88.800 |
+| CDN | Cloudflare Pro (WAF) | $88.800 |
+| Datos de mercado | Twelve Data (Forex + Crypto) | $350.760 |
+| Dialer VoIP | Twilio (30 agentes, ~33K min) | $2.047.200 |
+| SMS | ~1.500 mensajes | $19.800 |
+| Email transaccional | Resend Pro | $88.800 |
+| Dominio | `.com` | $4.440 |
+| Email corporativo | Google Workspace (15 cuentas) | $479.520 |
+| GitHub Team | 3 desarrolladores | $53.280 |
+| Monitoreo | Sentry Team | $115.440 |
+| **Subtotal Infraestructura** | | **$3.567.840/mes** |
+| 2 Devs Junior (Contrato laboral) | Mantenimiento, nuevas features | $6.566.400 |
+| **TOTAL CON EQUIPO** | | **$10.134.240/mes** |
 
 ---
 
@@ -355,17 +355,18 @@ Todo el código de la plataforma está construido con tecnologías gratuitas y d
 
 ## 10. Pasarelas de Pago (PSP) — Comisiones por Transacción
 
-Las pasarelas de pago cobran un porcentaje por cada depósito procesado. Este costo normalmente se traslada al cliente o se descuenta de la operación — no es un costo fijo mensual.
+Las pasarelas de pago cobran un porcentaje por cada depósito procesado. Este costo normalmente se traslada al cliente o se descuenta de la operación — no es un costo fijo mensual. Las comisiones de ejemplo incluyen **+20%** de margen técnico.
 
 | Pasarela | Comisión | Mejor para |
 |:---|:---|:---|
-| **Stripe** | 2.9% + $1.110 por transacción | Tarjetas internacionales (Visa, MC) |
+| **Stripe** | 2.9% + $1.332 por transacción | Tarjetas internacionales (Visa, MC) |
 | **PayRetailers** | 3.5% – 5% | Transferencias locales en LATAM (PSE, SPEI, PIX) |
 | **Coinbase Commerce** | 1% | Depósitos en criptomonedas |
 | **NOWPayments** | 0.5% | Crypto (más opciones de monedas) |
 
 **Ejemplo:** Si un cliente deposita $1.000.000 COP vía Stripe:
-- Comisión: $1.000.000 × 2.9% + $1.110 = **$30.110 COP**
+- Comisión base: $1.000.000 × 2.9% + $1.110 = $30.110 COP
+- Con margen técnico (+20%): **$36.132 COP**
 
 ---
 
@@ -373,19 +374,31 @@ Las pasarelas de pago cobran un porcentaje por cada depósito procesado. Este co
 
 | Rubro | 🟢 Demo | 🟡 Producción (50 clientes) | 🔴 Escalado (500 clientes) |
 |:---|---:|---:|---:|
-| Supabase | $0 | $92.500 | $203.500 |
-| Hosting + CDN | $0 | $0 | $148.000 |
-| Datos de mercado | $0 | $0 | $292.300 |
-| Dialer VoIP | $0 | $565.000 | $1.695.000 |
-| SMS + Email | $0 | $3.300 | $90.500 |
-| Dominio + Email Corp. | $11.100 | $22.200 | $403.300 |
-| Dev Tools (GitHub, Sentry) | $0 | $0 | $140.600 |
-| **Subtotal Tech** | **$11.100** | **$683.000** | **$2.973.200** |
-| 2 Devs Junior | $0 | $4.000.000 | $5.472.000 |
-| **GRAN TOTAL** | **$11.100** | **$4.683.000** | **$8.445.200** |
+| Supabase | $0 | $111.000 | $244.200 |
+| Hosting + CDN | $0 | $0 | $177.600 |
+| Datos de mercado | $0 | $0 | $350.760 |
+| Dialer VoIP | $0 | $682.400 | $2.047.200 |
+| SMS + Email | $0 | $3.960 | $108.600 |
+| Dominio + Email Corp. | $13.320 | $26.640 | $483.960 |
+| Dev Tools (GitHub, Sentry) | $0 | $0 | $168.720 |
+| **Subtotal Tech** | **$13.320** | **$819.600** | **$3.567.840** |
+| 2 Devs Junior | $0 | $4.800.000 | $6.566.400 |
+| **GRAN TOTAL** | **$13.320** | **$5.619.600** | **$10.134.240** |
 
 > [!CAUTION]
 > **El VoIP y los desarrolladores representan el 97% del costo operativo.** La infraestructura técnica pura (servidores, bases de datos, hosting) es sorprendentemente barata gracias al modelo serverless. La decisión más importante de costos no es tecnológica — es cuántos agentes contratas y cuántos minutos hablan al día.
 
 > [!TIP]
-> **Para arrancar en producción real:** Supabase Pro ($92.500) + dominio .com ($44.400/año) + 2 Devs Junior por prestación ($4.000.000) = **~$4.096.200 COP/mes**. Todo lo demás puede empezar en planes gratuitos.
+> **Para arrancar en producción real:** Supabase Pro ($111.000) + dominio .com ($53.280/año) + 2 Devs Junior por prestación ($4.800.000) = **~$4.915.440 COP/mes**. Todo lo demás puede empezar en planes gratuitos.
+
+---
+
+## 12. Desglose del margen +20% (referencia)
+
+| Escenario | Costo base (antes) | Con +20% margen | Margen aprox. (tu ganancia técnica) |
+|:---|---:|---:|---:|
+| Demo / MVP | $11.100 | $13.320 | $2.220 |
+| Producción inicial (con equipo) | $4.683.000 | $5.619.600 | $936.600 |
+| Producción escalada (con equipo) | $8.445.200 | $10.134.240 | $1.689.040 |
+
+*El margen se aplica de forma uniforme sobre cada partida para reflejar honorarios de arquitectura, despliegue, soporte y evolución del producto a cargo del programador principal.*
