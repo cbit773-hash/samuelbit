@@ -7,7 +7,7 @@ import { supabase } from '../supabase/client';
 import { getMyWallet, getMyWalletOrCreate, getMyTransactions } from '../supabase/services/wallet.service';
 import { RECOMMENDED_CRYPTOS } from './nowpayments';
 
-export type PaymentGateway = 'nowpayments' | 'stripe' | 'manual';
+export type PaymentGateway = 'nowpayments' | 'stripe' | 'manual' | 'manual_bank';
 export type DepositMethod = 'crypto_invoice' | 'crypto_direct' | 'manual';
 
 interface EdgeError {
@@ -131,20 +131,29 @@ export async function initiateManualDeposit(params: {
   cciOrigin?: string;
   amountPenDeclared?: number;
   receiptPath?: string;
+  gateway?: 'manual' | 'manual_bank';
 }): Promise<{ transactionId: string } | { error: string }> {
-  const result = await invokeFunction<{ transactionId: string }>('create-deposit', {
-    amount: params.amount,
-    method: 'manual',
-    notes: params.notes,
-    company_bank_id: params.companyBankId ?? null,
-    client_bank: params.clientBank ?? null,
-    cci_origin: params.cciOrigin ?? null,
-    amount_pen_declared: params.amountPenDeclared ?? null,
-    receipt_path: params.receiptPath ?? null,
+  const gateway = params.gateway ?? 'manual_bank';
+  const { data, error } = await supabase.rpc('create_deposit_transaction', {
+    p_amount: params.amount,
+    p_payment_method: 'bank_transfer',
+    p_gateway: gateway,
+    p_notes: params.notes ?? null,
+    p_company_bank_id: params.companyBankId ?? null,
+    p_client_bank: params.clientBank ?? null,
+    p_cci_origin: params.cciOrigin ?? null,
+    p_amount_pen_declared: params.amountPenDeclared ?? null,
+    p_receipt_path: params.receiptPath ?? null,
   });
 
-  if ('error' in result) return result;
-  return { transactionId: result.transactionId };
+  if (error) {
+    console.error('[initiateManualDeposit]', error);
+    return { error: mapEdgeErrorMessage(error.message) };
+  }
+
+  const txId = (data as { transaction_id?: string })?.transaction_id;
+  if (!txId) return { error: 'No se pudo crear la transacción' };
+  return { transactionId: txId };
 }
 
 // ─── Withdrawal Flow ─────────────────────────────────────────

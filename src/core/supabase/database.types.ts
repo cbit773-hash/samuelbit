@@ -38,6 +38,7 @@ export interface Profile {
   full_name: string;
   phone: string | null;
   country?: string | null;
+  country_code?: string | null;
   interest_level?: string | null;
   onboarding_completed_at?: string | null;
   role: UserRole;

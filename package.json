@@ -12,7 +12,16 @@
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:db-push": "supabase db push",
+    "db:push": "supabase db push --linked",
+    "db:push:pooler": "node scripts/db-push-pooler.mjs",
+    "deploy:cloudflare": "node scripts/deploy-cloudflare.mjs",
+    "deploy": "node scripts/deploy-workers.mjs",
+    "print:auth-urls": "node scripts/print-auth-urls.mjs",
+    "configure:prod-auth": "node scripts/configure-prod-auth.mjs",
     "verify:supabase": "node scripts/verify-supabase-health.mjs",
+    "test:rls": "node scripts/test-rls.mjs",
+    "verify:prod-smoke": "node scripts/verify-prod-smoke.mjs",
+    "deploy:edge-functions": "supabase functions deploy approve-transaction --project-ref rierlbcvpvfxkffxnyup && supabase functions deploy binance-market-data --project-ref rierlbcvpvfxkffxnyup && supabase functions deploy evaluate-position-brackets --project-ref rierlbcvpvfxkffxnyup && supabase functions deploy create-deposit-for-client --project-ref rierlbcvpvfxkffxnyup && supabase functions deploy twilio-voice-token --project-ref rierlbcvpvfxkffxnyup && supabase functions deploy twilio-voice --project-ref rierlbcvpvfxkffxnyup && supabase functions deploy twilio-voice-status --project-ref rierlbcvpvfxkffxnyup && supabase functions deploy process-web-lead --project-ref rierlbcvpvfxkffxnyup",
     "seed:dev-users": "node scripts/seed-dev-users.mjs",
     "supabase:deploy:process-web-lead": "supabase functions deploy process-web-lead --project-ref rierlbcvpvfxkffxnyup",
     "supabase:functions:serve": "supabase functions serve --env-file supabase/.env.local",
@@ -32,6 +41,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.39.0",
     "@eslint/js": "^10.0.1",
     "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^24.12.2",
@@ -48,6 +58,7 @@
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vercel": "^54.2.0",
+    "wrangler": "^4.105.0",
     "vite": "^8.0.10",
     "vitest": "^3.2.4"
   }

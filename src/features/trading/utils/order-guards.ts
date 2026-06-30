@@ -1,6 +1,7 @@
 import type { AccountMode } from '../store/trading.store';
 import type { WsConnectionStatus } from '../store/trading.store';
 import { canOpenPosition, requiredMargin } from './margin.calculator';
+import { shouldBlockNewOrders } from './margin-risk';
 
 export interface OrderGuardInput {
   wsStatus: WsConnectionStatus;
@@ -8,13 +9,24 @@ export interface OrderGuardInput {
   activeBalance: number;
   equity: number;
   usedMargin: number;
+  marginLevel: number;
   volume: number;
   price: number | null;
   leverage: number;
 }
 
 export function getOrderBlockReason(input: OrderGuardInput): string | null {
-  const { wsStatus, accountMode, activeBalance, equity, usedMargin, volume, price, leverage } = input;
+  const {
+    wsStatus,
+    accountMode,
+    activeBalance,
+    equity,
+    usedMargin,
+    marginLevel,
+    volume,
+    price,
+    leverage,
+  } = input;
 
   if (wsStatus !== 'live') {
     return 'Esperando cotización en vivo…';
@@ -24,6 +36,9 @@ export function getOrderBlockReason(input: OrderGuardInput): string | null {
   }
   if (volume <= 0) {
     return 'Indica un volumen válido';
+  }
+  if (shouldBlockNewOrders(marginLevel)) {
+    return 'Margin call: nivel de margen por debajo del 100%. Cierra posiciones antes de abrir nuevas.';
   }
   if (accountMode === 'live' && activeBalance <= 0) {
     return 'Deposita fondos para operar en cuenta real';

@@ -8,7 +8,6 @@ import {
   ListChecks,
   Target,
   Crown,
-  ShieldAlert,
   Headphones,
   BarChart3,
   ArrowUpCircle,
@@ -81,14 +80,10 @@ export function getRoleNavItems(role: Role): NavItem[] {
       ];
     case 'HEAD':
       return [
-        { to: '/dashboard/head?tab=overview', label: 'Centro de Comando', icon: Crown, section: 'Alta direcci├│n' },
-        { to: '/dashboard/head?tab=personnel', label: 'Personal', icon: Users },
-        { to: '/dashboard/head?tab=web-registrations', label: 'Registros Web', icon: Globe },
+        { to: '/dashboard/head?tab=overview', label: 'Centro de Comando', icon: Crown, section: 'Alta dirección' },
+        { to: '/dashboard/head?tab=clientes', label: 'Clientes', icon: UserCircle },
         { to: '/dashboard/head?tab=leads', label: 'CRM & Leads', icon: ListChecks },
-        { to: '/dashboard/head?tab=deposits', label: 'Auditor├¡a Dep├│sitos', icon: BarChart3 },
-        { to: '/dashboard/head?tab=performance', label: 'Rendimiento', icon: Target },
-        { to: '/dashboard/head?tab=fraud', label: 'Anti-Fraude', icon: ShieldAlert },
-        { to: '/dashboard/supervisor-market', label: 'Mercado (supervisor)', icon: LineChart },
+        { to: '/dashboard/head?tab=personnel', label: 'Personal', icon: Users },
       ];
     default:
       return [];

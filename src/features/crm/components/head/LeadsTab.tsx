@@ -19,7 +19,7 @@ export function LeadsTab() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [showAdd, setShowAdd] = useState(false);
-  const [newLead, setNewLead] = useState({ first_name: '', last_name: '', phone: '', email: '', country: 'México' });
+  const [newLead, setNewLead] = useState({ first_name: '', last_name: '', phone: '', email: '' });
   const [editingStatus, setEditingStatus] = useState<string | null>(null);
   const [editingAgent, setEditingAgent] = useState<string | null>(null);
 
@@ -52,9 +52,9 @@ export function LeadsTab() {
 
   const addLead = async () => {
     if (!newLead.first_name || !newLead.phone) return;
-    const created = await createLead({ first_name: newLead.first_name, last_name: newLead.last_name, phone: newLead.phone, email: newLead.email || null, country: newLead.country });
+    const created = await createLead({ first_name: newLead.first_name, last_name: newLead.last_name, phone: newLead.phone, email: newLead.email || null });
     if (created) setLeads(prev => [created, ...prev]);
-    setNewLead({ first_name: '', last_name: '', phone: '', email: '', country: 'México' });
+    setNewLead({ first_name: '', last_name: '', phone: '', email: '' });
     setShowAdd(false);
   };
 

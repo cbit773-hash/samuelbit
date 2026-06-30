@@ -326,6 +326,7 @@ supabase/
 
 | Archivo | Tema |
 |---------|------|
+| [BRIEF_TECNICO_ARQUITECTONICO.md](./BRIEF_TECNICO_ARQUITECTONICO.md) | **Brief maestro** — arquitectura senior, ADRs, flujos y playbook de replicación |
 | [ESTRUCTURA_PROYECTO.md](./ESTRUCTURA_PROYECTO.md) | **Este archivo** — árbol de carpetas y mapa de código |
 | [17_ROL_CLIENT_INVESTOR.md](./17_ROL_CLIENT_INVESTOR.md) | Rol inversor / panel cliente |
 | [GUIA_TERMINAL_FORTADE.md](./GUIA_TERMINAL_FORTADE.md) | Terminal Fortrade |
@@ -345,6 +346,7 @@ supabase/
 
 ```
 docs/
+├── BRIEF_TECNICO_ARQUITECTONICO.md
 ├── 01_TECHNICAL_STANDARDS.md
 ├── 02_BUSINESS_LOGIC.md
 ├── 03_DESIGN_SYSTEM.md

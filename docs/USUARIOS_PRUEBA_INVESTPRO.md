@@ -4,21 +4,23 @@
 
 **Contraseña común:** `Dev2026!Inv`
 
-**Login:** http://localhost:5173/auth/login
+**Login:** [http://localhost:5173/auth/login](http://localhost:5173/auth/login)
 
 ---
 
 ## Tabla de acceso
 
-| Rol | Email | Contraseña | Panel tras login |
-|-----|-------|------------|----------------|
-| CLIENT | client@investpro.com | Dev2026!Inv | `/dashboard/trade` |
-| AGENT | agent@investpro.com | Dev2026!Inv | `/dashboard/agent` |
-| TEAM_LEADER | teamleader@investpro.com | Dev2026!Inv | `/dashboard/team-leader` |
-| FLOOR_MANAGER | floormanager@investpro.com | Dev2026!Inv | `/dashboard/floor` |
-| MANAGER | manager@investpro.com | Dev2026!Inv | `/dashboard/manager` |
-| CHIEF | chief@investpro.com | Dev2026!Inv | `/dashboard/chief` |
-| HEAD | head@investpro.com | Dev2026!Inv | `/dashboard/head` |
+
+| Rol           | Email                                                           | Contraseña  | Panel tras login         |
+| ------------- | --------------------------------------------------------------- | ----------- | ------------------------ |
+| CLIENT        | [client@investpro.com](mailto:client@investpro.com)             | Dev2026!Inv | `/dashboard/trade`       |
+| AGENT         | [agent@investpro.com](mailto:agent@investpro.com)               | Dev2026!Inv | `/dashboard/agent`       |
+| TEAM_LEADER   | [teamleader@investpro.com](mailto:teamleader@investpro.com)     | Dev2026!Inv | `/dashboard/team-leader` |
+| FLOOR_MANAGER | [floormanager@investpro.com](mailto:floormanager@investpro.com) | Dev2026!Inv | `/dashboard/floor`       |
+| MANAGER       | [manager@investpro.com](mailto:manager@investpro.com)           | Dev2026!Inv | `/dashboard/manager`     |
+| CHIEF         | [chief@investpro.com](mailto:chief@investpro.com)               | Dev2026!Inv | `/dashboard/chief`       |
+| HEAD          | [head@investpro.com](mailto:head@investpro.com)                 | Dev2026!Inv | `/dashboard/head`        |
+
 
 Los nombres en perfil coinciden con los perfiles demo de `supabase/seed_data.sql` (referencia histórica).
 
@@ -28,7 +30,7 @@ Los nombres en perfil coinciden con los perfiles demo de `supabase/seed_data.sql
 
 ### 1. Service role en `.env`
 
-En Supabase Dashboard → **Settings → API** → copiar **service_role** (secreto, no va en `VITE_*`):
+En Supabase Dashboard → **Settings → API** → copiar **service_role** (secreto, no va en `VITE_`*):
 
 ```env
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
@@ -52,7 +54,7 @@ CLI (proyecto vinculado):
 npx supabase db query -f supabase/scripts/seed_dev_role_users_post.sql --linked
 ```
 
-O en **SQL Editor**: [`supabase/scripts/seed_dev_role_users_post.sql`](../supabase/scripts/seed_dev_role_users_post.sql)
+O en **SQL Editor**: `[supabase/scripts/seed_dev_role_users_post.sql](../supabase/scripts/seed_dev_role_users_post.sql)`
 
 ### 4. Verificar
 
@@ -80,7 +82,7 @@ SELECT COUNT(*) FROM public.leads
 WHERE assigned_to = (SELECT id FROM public.profiles WHERE email = 'agent@investpro.com');
 ```
 
-Debe ser **> 0**. Luego login AGENT → `/dashboard/agent?tab=dialer`. Checklist completo: [`GUIA_AGENT_CLOSER_E2E.md`](GUIA_AGENT_CLOSER_E2E.md).
+Debe ser **> 0**. Luego login AGENT → `/dashboard/agent?tab=dialer`. Checklist completo: `[GUIA_AGENT_CLOSER_E2E.md](GUIA_AGENT_CLOSER_E2E.md)`.
 
 ---
 
@@ -98,7 +100,7 @@ Debe ser **> 0**. Luego login AGENT → `/dashboard/agent?tab=dialer`. Checklist
 }
 ```
 
-5. Ejecutar el SQL post-seed del paso 3 anterior.
+1. Ejecutar el SQL post-seed del paso 3 anterior.
 
 Si el usuario ya existía sin metadata, asignar rol:
 
@@ -107,24 +109,27 @@ UPDATE public.profiles SET role = 'HEAD', full_name = 'Samuel Director'
 WHERE email = 'head@investpro.com';
 ```
 
-Ver también [`GUIA_STAFF_AUTH.md`](GUIA_STAFF_AUTH.md).
+Ver también `[GUIA_STAFF_AUTH.md](GUIA_STAFF_AUTH.md)`.
 
 ---
 
 ## Metadata por usuario (script / manual)
 
-| Rol | `full_name` en metadata |
-|-----|-------------------------|
-| HEAD | Samuel Director |
-| CHIEF | Ana Ríos |
-| MANAGER | Roberto Mendoza |
-| FLOOR_MANAGER | Carlos Navarro |
-| TEAM_LEADER | Laura Gómez |
-| AGENT | Pedro Ruiz |
-| CLIENT | Fernando Guzmán |
+
+| Rol           | `full_name` en metadata |
+| ------------- | ----------------------- |
+| HEAD          | Samuel Director         |
+| CHIEF         | Ana Ríos                |
+| MANAGER       | Roberto Mendoza         |
+| FLOOR_MANAGER | Carlos Navarro          |
+| TEAM_LEADER   | Laura Gómez             |
+| AGENT         | Pedro Ruiz              |
+| CLIENT        | Fernando Guzmán         |
+
 
 ---
 
 ## No usar en este flujo
 
-- **`supabase/seed_data.sql`** — borra datos operativos y desvincula FK de `auth.users`. Ver [`CREDENTIALS.md`](../CREDENTIALS.md).
+- `**supabase/seed_data.sql**` — borra datos operativos y desvincula FK de `auth.users`. Ver `[CREDENTIALS.md](../CREDENTIALS.md)`.
+

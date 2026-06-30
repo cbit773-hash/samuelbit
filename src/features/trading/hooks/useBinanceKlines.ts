@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react';
 import type { ChartInterval } from '../store/trading.store';
 import type { IndicatorCandle } from '../utils/indicators';
 import { isBinanceStreamSymbol } from '../utils/symbol-map';
-
-const INTERVAL_MAP: Record<ChartInterval, string> = {
-  '15m': '15m',
-  '1h': '1h',
-  '1d': '1d',
-};
+import { fetchBinanceKlines } from '../utils/fetch-binance-rest';
 
 export function useBinanceKlines(symbol: string, interval: ChartInterval) {
   const [candles, setCandles] = useState<IndicatorCandle[]>([]);
@@ -27,15 +22,8 @@ export function useBinanceKlines(symbol: string, interval: ChartInterval) {
       return;
     }
 
-    const binanceInterval = INTERVAL_MAP[interval];
-    const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${binanceInterval}&limit=120`;
-
-    fetch(url)
-      .then((r) => {
-        if (!r.ok) throw new Error('No se pudieron cargar velas');
-        return r.json();
-      })
-      .then((rows: (string | number)[][]) => {
+    fetchBinanceKlines(symbol, interval, 120)
+      .then((rows) => {
         if (cancelled) return;
         const parsed: IndicatorCandle[] = rows.map((k) => ({
           time: Math.floor(Number(k[0]) / 1000),

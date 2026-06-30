@@ -33,6 +33,7 @@ export function OrderPanel({
   const equity = useTradingStore((s) => s.equity);
   const balance = useTradingStore((s) => s.balance);
   const usedMargin = useTradingStore((s) => s.usedMargin);
+  const marginLevel = useTradingStore((s) => s.marginLevel);
   const leverage = useTradingStore((s) => s.leverage);
   const accountMode = useTradingStore((s) => s.accountMode);
   const wsStatus = useTradingStore((s) => s.wsStatus);
@@ -48,6 +49,7 @@ export function OrderPanel({
     activeBalance: balance,
     equity,
     usedMargin,
+    marginLevel,
     volume: vol,
     price,
     leverage,

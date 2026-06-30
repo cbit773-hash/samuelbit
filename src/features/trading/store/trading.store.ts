@@ -76,19 +76,18 @@ interface TradingState {
   setShowChartEntries: (show: boolean) => void;
 }
 
-function priceMap(activeSymbol: string, currentPrice: number | null): Record<string, number> {
-  if (currentPrice == null) return {};
-  return { [activeSymbol]: currentPrice };
-}
-
 function deriveMetrics(state: {
   balance: number;
   positions: StorePosition[];
+  prices: Record<string, number>;
   activeSymbol: string;
   currentPrice: number | null;
   leverage: number;
 }) {
-  const prices = priceMap(state.activeSymbol, state.currentPrice);
+  const prices: Record<string, number> = { ...state.prices };
+  if (state.currentPrice != null) {
+    prices[state.activeSymbol] = state.currentPrice;
+  }
   const open = state.positions.filter((p) => p.status === 'OPEN');
   const equity = calcEquityFromPositions(state.balance, state.positions, prices);
   const usedMargin = calcUsedMargin(state.positions, prices, state.leverage);
@@ -180,10 +179,13 @@ export const useTradingStore = create<TradingState>((set) => ({
         return {
           ...base,
           currentPrice: price,
-          ...deriveMetrics({ ...state, currentPrice: price }),
+          ...deriveMetrics({ ...state, currentPrice: price, prices }),
         };
       }
-      return base;
+      return {
+        ...base,
+        ...deriveMetrics({ ...state, prices }),
+      };
     }),
 
   setCurrentPrice: (price) =>

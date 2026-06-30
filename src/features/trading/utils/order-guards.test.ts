@@ -5,6 +5,7 @@ const base = {
   wsStatus: 'live' as const,
   equity: 10000,
   usedMargin: 0,
+  marginLevel: 999,
   volume: 0.1,
   price: 50000,
   leverage: 100,
@@ -42,9 +43,14 @@ describe('getOrderBlockReason', () => {
     ).toMatch(/Margen insuficiente/i);
   });
 
-  it('blocks invalid volume', () => {
+  it('blocks on margin call', () => {
     expect(
-      getOrderBlockReason({ ...base, accountMode: 'demo', activeBalance: 10000, volume: 0 })
-    ).toMatch(/volumen/i);
+      getOrderBlockReason({
+        ...base,
+        accountMode: 'demo',
+        activeBalance: 10000,
+        marginLevel: 80,
+      }),
+    ).toMatch(/Margin call/i);
   });
 });

@@ -1,5 +1,4 @@
 # Verificación E2E — Primer cliente real
-
 ## 1. Registro en la app
 
 1. `http://localhost:5173/registro`

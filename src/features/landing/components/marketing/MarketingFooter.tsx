@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { BrandLogo } from '../../../../shared/components/BrandLogo';
-import { PERU_COMPANY } from '../../../../shared/constants/peru-company';
+import { LATAM_COMPANY } from '../../../../shared/constants/latam-company';
 import { TrustBar } from '../../../../shared/components/TrustBar';
 
 export function MarketingFooter() {
@@ -23,7 +23,7 @@ export function MarketingFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           <div>
             <BrandLogo link={false} size="sm" />
-            <p className="mt-3 text-muted text-sm">Trading CFD desde Perú. Asesoría en español.</p>
+            <p className="mt-3 text-muted text-sm">Trading CFD en LATAM. Asesoría en español.</p>
             <Link to="/registro" className="bolt-btn-primary inline-block mt-4 text-sm">
               Abrir cuenta
             </Link>
@@ -38,7 +38,7 @@ export function MarketingFooter() {
           <div>
             <h5 className="text-foreground font-bold mb-3 text-sm">Soporte</h5>
             <ul className="space-y-2 text-sm text-muted">
-              <li><a href={`tel:${PERU_COMPANY.phoneTel}`} className="hover:text-brand">{PERU_COMPANY.phoneDisplay}</a></li>
+              <li><a href={`tel:${LATAM_COMPANY.phoneTel}`} className="hover:text-brand">{LATAM_COMPANY.phoneDisplay}</a></li>
               <li><a href="mailto:soporte@investpro.com" className="hover:text-brand">soporte@investpro.com</a></li>
             </ul>
           </div>
@@ -54,7 +54,7 @@ export function MarketingFooter() {
 
         <div className="border-t border-border pt-6 text-xs text-muted">
           <p className="mb-3">
-            {PERU_COMPANY.legalName} · RUC {PERU_COMPANY.ruc} · {PERU_COMPANY.address}
+            {LATAM_COMPANY.legalName} · {LATAM_COMPANY.address}
           </p>
           <TrustBar compact />
           <p className="text-center mt-6">&copy; {new Date().getFullYear()} InvestPRO</p>

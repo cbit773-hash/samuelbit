@@ -16,6 +16,7 @@ import { AgentDashboard } from "../features/crm/pages/AgentDashboard";
 import { TeamLeaderDashboard } from "../features/crm/pages/TeamLeaderDashboard";
 import { FloorDashboard } from "../features/crm/pages/FloorDashboard";
 import { HeadDashboard } from "../features/crm/pages/HeadDashboard";
+import { HeadClientDetailPage } from "../features/crm/pages/HeadClientDetailPage";
 import { ChiefDashboard } from "../features/crm/pages/ChiefDashboard";
 import { ManagerDashboard } from "../features/crm/pages/ManagerDashboard";
 import { ClientAccountPage } from "../features/client/pages/ClientAccountPage";
@@ -92,6 +93,7 @@ export const router = createBrowserRouter([
       { path: "manager", element: <ManagerDashboard /> },
       { path: "chief", element: <ChiefDashboard /> },
       { path: "head", element: <HeadDashboard /> },
+      { path: "head/clientes/:userId", element: <HeadClientDetailPage /> },
 
       { path: "*", element: <RouteErrorPage /> },
     ],

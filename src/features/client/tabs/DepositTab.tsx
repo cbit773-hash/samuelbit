@@ -5,7 +5,7 @@ import { ActionBanner, type ActionMessage } from '../components/ActionBanner';
 import { DepositContextBanner } from '../components/DepositContextBanner';
 import { CryptoDepositSection } from '../components/CryptoDepositSection';
 import { DepositTrustFooter } from '../components/DepositTrustFooter';
-import { ManualDepositPeruFlow } from '../../wallet/components/ManualDepositPeruFlow';
+import { ManualBankFlow } from '../../wallet/components/ManualBankFlow';
 import { BoltCard } from '../../../shared/ui/BoltCard';
 
 interface DepositTabProps {
@@ -54,14 +54,14 @@ export function DepositTab({ actionMessage, onActionMessage }: DepositTabProps) 
               : 'bg-surface-inset text-muted hover:text-foreground'
           }`}
         >
-          Transferencia Perú
+          Transferencia bancaria
         </button>
       </div>
 
       {depositMethod === 'crypto' ? (
         <CryptoDepositSection onMessage={onActionMessage} />
       ) : (
-        <ManualDepositPeruFlow
+        <ManualBankFlow
           onSuccess={() => void refreshAll()}
           setMessage={onActionMessage}
         />

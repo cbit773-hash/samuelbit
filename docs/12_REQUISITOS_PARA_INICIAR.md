@@ -162,7 +162,7 @@
 
 ### 4.2 Requisitos Previos para Google Ads
 
-- [ ] Dominio comprado y apuntando al hosting
+- [x ] Dominio comprado y apuntando al hosting
 - [x] Landing page publicada con formulario funcional (`/registro`) ✅
 - [x] Formulario Landing → Supabase (tabla leads) configurado ✅
 - [x] UTM tracking integrado en landing ✅

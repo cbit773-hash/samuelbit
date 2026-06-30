@@ -18,6 +18,7 @@ import { calcFloatingPnl } from '../utils/position-mappers';
 import { boltTheme } from '../../../shared/theme/bolt-theme';
 import { PendingOrderForm } from './PendingOrderForm';
 import { dbSymbolToMarket } from '../utils/symbol-map';
+import { getMarginRiskState } from '../utils/margin-risk';
 
 type Tab = 'open' | 'closed' | 'pending' | 'summary';
 
@@ -210,11 +211,30 @@ export function OperationsBottomPanel({ onOpenMobileOrder }: OperationsBottomPan
       ? 'Sincronizando datos de tu cuenta… Si persiste, contacta a soporte.'
       : error;
 
+  const riskState = getMarginRiskState(marginLevel);
+  const riskBanner =
+    riskState === 'margin_call' || riskState === 'stop_out'
+      ? 'Margin call: cierra posiciones o deposita fondos. Nuevas órdenes bloqueadas.'
+      : riskState === 'alert'
+        ? 'Alerta de margen: nivel por debajo del 200%.'
+        : null;
+
   return (
     <div
       className="shrink-0 flex flex-col border-t min-h-[180px] max-h-[32vh]"
       style={{ background: boltTheme.bgPanel, borderColor: boltTheme.border }}
     >
+      {riskBanner && (
+        <div
+          className={`px-3 py-2 text-xs font-bold text-center shrink-0 ${
+            riskState === 'stop_out' || riskState === 'margin_call'
+              ? 'bg-rose-500/20 text-rose-300'
+              : 'bg-amber-500/20 text-amber-200'
+          }`}
+        >
+          {riskBanner}
+        </div>
+      )}
       <div
         className="flex items-center justify-between border-b shrink-0"
         style={{ borderColor: boltTheme.border }}

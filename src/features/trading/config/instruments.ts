@@ -1,4 +1,4 @@
-/** Catálogo de instrumentos — alineado a disponibilidad en terminal (Binance WS) */
+/** Catálogo lite — 12 instrumentos core con feed Binance */
 export type InstrumentAvailability = 'live' | 'coming_soon';
 
 export interface TradingInstrument {
@@ -14,11 +14,16 @@ export interface TradingInstrument {
 export const TRADING_INSTRUMENTS: TradingInstrument[] = [
   { id: 'btc', label: 'BTC/USD', category: 'crypto', marketSymbol: 'BTCUSDT', dbSymbol: 'BTC/USD', availability: 'live', spreadHint: '$1.50' },
   { id: 'eth', label: 'ETH/USD', category: 'crypto', marketSymbol: 'ETHUSDT', dbSymbol: 'ETH/USD', availability: 'live', spreadHint: '$0.30' },
+  { id: 'bnb', label: 'BNB/USD', category: 'crypto', marketSymbol: 'BNBUSDT', dbSymbol: 'BNB/USD', availability: 'live', spreadHint: '$0.20' },
+  { id: 'sol', label: 'SOL/USD', category: 'crypto', marketSymbol: 'SOLUSDT', dbSymbol: 'SOL/USD', availability: 'live', spreadHint: '$0.05' },
+  { id: 'xrp', label: 'XRP/USD', category: 'crypto', marketSymbol: 'XRPUSDT', dbSymbol: 'XRP/USD', availability: 'live', spreadHint: '$0.01' },
+  { id: 'doge', label: 'DOGE/USD', category: 'crypto', marketSymbol: 'DOGEUSDT', dbSymbol: 'DOGE/USD', availability: 'live', spreadHint: '$0.01' },
+  { id: 'ada', label: 'ADA/USD', category: 'crypto', marketSymbol: 'ADAUSDT', dbSymbol: 'ADA/USD', availability: 'live', spreadHint: '$0.01' },
+  { id: 'link', label: 'LINK/USD', category: 'crypto', marketSymbol: 'LINKUSDT', dbSymbol: 'LINK/USD', availability: 'live', spreadHint: '$0.02' },
+  { id: 'ltc', label: 'LTC/USD', category: 'crypto', marketSymbol: 'LTCUSDT', dbSymbol: 'LTC/USD', availability: 'live', spreadHint: '$0.05' },
+  { id: 'avax', label: 'AVAX/USD', category: 'crypto', marketSymbol: 'AVAXUSDT', dbSymbol: 'AVAX/USD', availability: 'live', spreadHint: '$0.03' },
   { id: 'eur', label: 'EUR/USD', category: 'forex', marketSymbol: 'EURUSDT', dbSymbol: 'EUR/USD', availability: 'live', spreadHint: '0.1 pips' },
-  { id: 'xau', label: 'Oro XAU/USD', category: 'commodities', marketSymbol: 'XAUUSDT', dbSymbol: 'XAU/USD', availability: 'live', spreadHint: '12 pts' },
-  { id: 'sp500', label: 'S&P 500 (CFD índice)', category: 'indices', availability: 'coming_soon', spreadHint: 'Solicitar al asesor' },
-  { id: 'nasdaq', label: 'Nasdaq 100 (CFD índice)', category: 'indices', availability: 'coming_soon', spreadHint: 'Solicitar al asesor' },
-  { id: 'usdpend', label: 'USD/PEN', category: 'forex', availability: 'coming_soon', spreadHint: 'Próximamente' },
+  { id: 'xau', label: 'Oro (PAXG)', category: 'commodities', marketSymbol: 'PAXGUSDT', dbSymbol: 'XAU/USD', availability: 'live', spreadHint: '12 pts' },
 ];
 
 export const LIVE_MARKET_SYMBOLS = TRADING_INSTRUMENTS.filter((i) => i.marketSymbol).map(

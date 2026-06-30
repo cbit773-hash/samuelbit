@@ -4,12 +4,14 @@ Completar en **Supabase Dashboard** del proyecto vinculado (`rierlbcvpvfxkffxnyu
 
 ## Authentication → URL Configuration
 
-| Campo | Valor (dev) |
-|-------|-------------|
-| Site URL | `http://localhost:5173` |
-| Redirect URLs | `http://localhost:5173/auth/restablecer` |
+| Campo | Valor (dev) | Valor (prod Cloudflare) |
+|-------|-------------|-------------------------|
+| Site URL | `http://localhost:5173` | `https://cbit773.cbit773.workers.dev` |
+| Redirect URLs | `http://localhost:5173/auth/restablecer` | `https://cbit773.cbit773.workers.dev/**` y `https://cbit773.cbit773.workers.dev/auth/restablecer` |
 
-En producción, sustituir por el dominio real (HTTPS).
+En producción, sustituir por el dominio real (HTTPS) si cambia el proyecto Pages.
+
+Script local: `npm run print:auth-urls`
 
 ## Authentication → Providers → Email
 
