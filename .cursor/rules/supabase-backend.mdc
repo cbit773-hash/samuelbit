@@ -1,0 +1,16 @@
+---
+description: Migraciones, RLS, RPCs y Edge Functions Supabase
+globs: supabase/**/*
+alwaysApply: false
+---
+
+# Supabase Backend
+
+- Migraciones: `supabase/migrations/` — formato `YYYYMMDDHHMMSS_descripcion.sql`
+- **Un timestamp = un archivo** (no duplicar versiones; ver `202605360002` vs `202605360001`)
+- RLS fail-closed; `GRANT EXECUTE` explícito en cada RPC nueva
+- Edge Functions: `_shared/cors.ts`, `supabase-admin.ts`; Deno deploy
+- Secrets solo en Dashboard Edge; nunca en `VITE_*` ni en el frontend
+- Verificar: `npm run verify:supabase`, `node scripts/verify-lite-rpcs.mjs`
+- Auth prod: `docs/operations/SUPABASE_AUTH_CHECKLIST.md`
+- Arquitectura BD: `docs/architecture/06_DATABASE_ARCHITECTURE.md`

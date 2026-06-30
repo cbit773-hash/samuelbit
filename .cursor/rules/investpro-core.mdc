@@ -1,0 +1,15 @@
+---
+description: Contexto InvestPRO Lite, stack, prod y convenciones globales
+alwaysApply: true
+---
+
+# InvestPRO Lite — Core
+
+- Producto: **InvestPRO Lite** (no usar marca Capital Prime en código nuevo)
+- Prod: `https://cbit773.cbit773.workers.dev` · Supabase `rierlbcvpvfxkffxnyup` · repo `cbit773-hash/samuelbit`
+- Stack: React 19, Vite 8, TypeScript 6, Tailwind, Zustand, Supabase, Cloudflare Workers
+- RBAC: HEAD → CHIEF → MANAGER → FLOOR_MANAGER → TEAM_LEADER → AGENT → CLIENT
+- Responder en **español**; cambios mínimos; no refactor fuera del scope pedido
+- No commitear `.env`; nunca `VITE_*` para service role ni secrets
+- Fiat lite: `manual_bank`, `ManualBankFlow`; UI LATAM sin nombres de país en copy nuevo
+- Docs: `docs/README.md` · arquitectura: `docs/architecture/ARQUITECTURA_LITE.md`

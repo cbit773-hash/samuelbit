@@ -1,0 +1,23 @@
+---
+description: Patrones TypeScript y React del frontend InvestPRO
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript y React
+
+- Prohibido `any`; usar `unknown` + validación. Interfaces para modelos; `enum` para constantes fijas
+- Features en `src/features/`; servicios Supabase en `src/core/supabase/`
+- Zustand solo trading/ticks; selectores atómicos:
+
+```typescript
+// ❌ re-render en cada tick
+const { currentPrices } = useTradingStore();
+// ✅ solo BTCUSDT
+const btc = useTradingStore((s) => s.currentPrices['BTCUSDT']);
+```
+
+- React Query para REST; no duplicar datos servidor en `useState` global
+- Router + RBAC: `src/app/router.tsx`, `RequireRouteAccess`, `role-navigation.config.ts`
+- Tests Vitest junto al módulo (`*.test.ts`)
+- Estándares: `docs/architecture/01_TECHNICAL_STANDARDS.md`

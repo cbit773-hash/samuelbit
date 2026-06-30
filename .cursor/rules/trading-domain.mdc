@@ -1,0 +1,15 @@
+---
+description: Terminal trading, margin, instrumentos y klines
+globs: src/features/trading/**/*
+alwaysApply: false
+---
+
+# Trading Domain
+
+- 12 instrumentos: `src/features/trading/config/instruments.ts`
+- Estado ticks/posiciones: Zustand `trading.store.ts`; margin: `margin-risk.ts`, `useRiskEngine`
+- Klines prod: Edge `binance-market-data` vía `fetch-binance-rest.ts` (no Binance directo en prod)
+- SL/TP server: RPCs `evaluate_position_brackets`, `close_position_at_price`
+- Guards y órdenes: `order-guards.ts`, `margin.calculator.ts`
+- Banner margin call: `OperationsBottomPanel.tsx`
+- Tests obligatorios al cambiar lógica de riesgo u órdenes (`*.test.ts`)

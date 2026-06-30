@@ -1,0 +1,15 @@
+---
+description: Deploy Cloudflare Workers y go-live Supabase
+globs: "{scripts/**,wrangler.jsonc,package.json,.github/**}"
+alwaysApply: false
+---
+
+# DevOps y Deploy
+
+- Frontend prod: `npm run deploy` → Worker `cbit773` (`wrangler.jsonc`)
+- **No** usar `public/_redirects` con Workers SPA (`not_found_handling: single-page-application`)
+- DB: `npm run db:push:pooler` (requiere `SUPABASE_DB_PASSWORD` en `.env`)
+- Edge: `npm run deploy:edge-functions` (requiere `SUPABASE_ACCESS_TOKEN` cuenta cbit773-hash)
+- Auth URLs: `npm run configure:prod-auth`
+- Smoke: `PROD_URL=https://cbit773.cbit773.workers.dev npm run verify:prod-smoke`
+- Guía completa: `docs/operations/DEVOPS.md` · estado: `docs/operations/ESTADO_DESARROLLO.md`
