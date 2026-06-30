@@ -37,4 +37,4 @@ Detalle: [docs/roles/08_ROLES_Y_FUNCIONES.md](./docs/roles/08_ROLES_Y_FUNCIONES.
 
 ## Cursor (agentes)
 
-Reglas: `.cursor/rules/` · Skills: `.cursor/skills/` · Ver también [AGENTS.md](./AGENTS.md)
+Reglas: `.cursor/rules/` (6 reglas, incl. `agent-onboarding`) · Skills: `.cursor/skills/` · [AGENTS.md](./AGENTS.md)

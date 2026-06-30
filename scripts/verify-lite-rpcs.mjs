@@ -1,5 +1,6 @@
 /**
  * Verifica si la migración InvestPRO Lite está aplicada en Supabase remoto.
+ * 404 = RPC no expuesta; 400/401/403 = existe (params o auth).
  */
 import { readFileSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
@@ -7,6 +8,8 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
+
+const NIL_UUID = '00000000-0000-0000-0000-000000000001';
 
 function loadEnv() {
   const envPath = resolve(root, '.env');
@@ -34,19 +37,20 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
+/** Cuerpos mínimos con nombres de parámetro SQL (p_*) */
 const LITE_RPCS = [
-  'chief_review_transaction',
-  'staff_get_client_bundle',
-  'staff_list_leads',
-  'evaluate_position_brackets',
-  'close_position_at_price',
+  { name: 'chief_review_transaction', body: { p_tx_id: NIL_UUID, p_action: 'approve' } },
+  { name: 'staff_get_client_bundle', body: { p_client_id: NIL_UUID } },
+  { name: 'staff_list_leads', body: {} },
+  { name: 'evaluate_position_brackets', body: { p_symbol: 'BTCUSDT', p_price: 1 } },
+  { name: 'close_position_at_price', body: { p_position_id: NIL_UUID, p_close_price: 1 } },
 ];
 
-async function checkRpc(name) {
+async function checkRpc(name, body) {
   const res = await fetch(`${url}/rest/v1/rpc/${name}`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({}),
+    body: JSON.stringify(body),
   });
   return res.status !== 404;
 }
@@ -61,10 +65,15 @@ async function main() {
   const auditOk = await checkAuditLog();
   console.log(auditOk ? '  OK' : '  MISSING', 'tabla audit_log');
 
-  for (const rpc of LITE_RPCS) {
-    const ok = await checkRpc(rpc);
-    console.log(ok ? '  OK' : '  MISSING', `RPC ${rpc}`);
+  let allOk = auditOk;
+  for (const { name, body } of LITE_RPCS) {
+    const ok = await checkRpc(name, body);
+    console.log(ok ? '  OK' : '  MISSING', `RPC ${name}`);
+    if (!ok) allOk = false;
   }
+
+  if (!allOk) process.exit(1);
+  console.log('\n[verify-lite-rpcs] Migración lite verificada.');
 }
 
 main().catch((e) => {

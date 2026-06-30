@@ -10,7 +10,7 @@
 | **Frontend** | https://cbit773.cbit773.workers.dev | Desplegado (`npm run deploy`) |
 | **Supabase** | https://rierlbcvpvfxkffxnyup.supabase.co | Activo |
 | **Hosting** | Cloudflare Workers `cbit773` | OK |
-| **Repo** | https://github.com/cbit773-hash/samuelbit | Sincronizar con `git push` |
+| **Repo** | https://github.com/cbit773-hash/samuelbit | Sincronizado (`main`) |
 
 ## Go-live aplicado
 
