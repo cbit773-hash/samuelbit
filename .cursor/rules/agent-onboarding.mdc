@@ -1,0 +1,23 @@
+---
+description: Al iniciar sesión, el agente debe leer la documentación maestra antes de codificar
+alwaysApply: true
+---
+
+# Onboarding de agente (obligatorio)
+
+Al **iniciar una conversación nueva** o ante tareas amplias (features, deploy, Supabase, CRM), leer **antes de editar código**:
+
+1. `AGENTS.md` — puntero reglas, skills y prod
+2. `docs/README.md` — índice de documentación
+3. `docs/architecture/ARQUITECTURA_LITE.md` — **documento principal** (arquitectura, stack, bounded contexts)
+
+Según la tarea, consultar además:
+
+| Tarea | Doc |
+|-------|-----|
+| Deploy / prod | `docs/operations/DEVOPS.md`, skill `investpro-go-live` |
+| Supabase / SQL | skill `investpro-supabase` |
+| CRM / roles | skill `investpro-crm-rbac`, `docs/roles/README.md` |
+| Estado actual | `docs/operations/ESTADO_DESARROLLO.md` |
+
+No asumir contexto de chats anteriores; verificar estado en esos docs si hay duda.
