@@ -487,7 +487,7 @@ sequenceDiagram
 | Twilio VoIP | `GUIA_TWILIO_VOIP.md` |
 | NOWPayments | `GUIA_NOWPAYMENTS.md` |
 | Registro y auth | `GUIA_REGISTRO_AUTH.md` |
-| Notificaciones | `GUIA_NOTIFICACIONES.md` |
+| Notificaciones | `19_GUIA_FUNCIONAMIENTO_SISTEMA.md` |
 | Google Ads / captación | `11_PLAN_MERCADEO_GOOGLE_ADS.md` |
 | Requisitos para lanzar | `12_REQUISITOS_PARA_INICIAR.md` |
 

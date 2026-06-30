@@ -1,73 +1,70 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Crown, Users, FileText, UserCircle } from 'lucide-react';
 import { OverviewTab } from '../components/head/OverviewTab';
 import { PersonnelTab } from '../components/head/PersonnelTab';
 import { LeadsTab } from '../components/head/LeadsTab';
 import { ClientsTab } from '../components/head/ClientsTab';
-
-const TABS = [
-  { id: 'overview', label: 'Overview', icon: Crown },
-  { id: 'clientes', label: 'Clientes', icon: UserCircle },
-  { id: 'leads', label: 'Leads', icon: FileText },
-  { id: 'personnel', label: 'Personal', icon: Users },
-] as const;
-
-type TabId = (typeof TABS)[number]['id'];
+import { WebRegistrationsTab } from '../components/head/WebRegistrationsTab';
+import { DepositsTab } from '../components/head/DepositsTab';
+import { PerformanceTab } from '../components/head/PerformanceTab';
+import { FraudTab } from '../components/head/FraudTab';
+import { SettingsTab } from '../components/head/SettingsTab';
+import {
+  DEFAULT_HEAD_TAB,
+  getHeadTabMeta,
+  isValidHeadTab,
+  type HeadTabId,
+} from '../config/head-tabs.config';
 
 export function HeadDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const tabFromUrl = searchParams.get('tab') as TabId | null;
-  const [activeTab, setActiveTab] = useState<TabId>(
-    tabFromUrl && TABS.some((t) => t.id === tabFromUrl) ? tabFromUrl : 'overview',
-  );
+  const rawTab = searchParams.get('tab');
+  const activeTab: HeadTabId = isValidHeadTab(rawTab) ? rawTab : DEFAULT_HEAD_TAB;
+  const tabMeta = getHeadTabMeta(activeTab);
+  const TabIcon = tabMeta.icon;
 
   useEffect(() => {
-    const urlTab = searchParams.get('tab') as TabId | null;
-    if (urlTab && TABS.some((t) => t.id === urlTab)) {
-      setActiveTab(urlTab);
+    if (!isValidHeadTab(rawTab)) {
+      setSearchParams({ tab: DEFAULT_HEAD_TAB }, { replace: true });
     }
-  }, [searchParams]);
+  }, [rawTab, setSearchParams]);
 
-  const handleTabChange = (tabId: TabId) => {
-    setActiveTab(tabId);
-    setSearchParams({ tab: tabId });
+  const renderTab = () => {
+    switch (activeTab) {
+      case 'overview':
+        return <OverviewTab />;
+      case 'clientes':
+        return <ClientsTab />;
+      case 'leads':
+        return <LeadsTab />;
+      case 'personnel':
+        return <PersonnelTab />;
+      case 'web-registrations':
+        return <WebRegistrationsTab />;
+      case 'deposits':
+        return <DepositsTab />;
+      case 'performance':
+        return <PerformanceTab />;
+      case 'fraud':
+        return <FraudTab />;
+      case 'settings':
+        return <SettingsTab />;
+      default:
+        return <OverviewTab />;
+    }
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-[1600px] mx-auto">
-      <div className="border-b border-cyan-500/10 pb-4">
-        <div className="inline-flex items-center gap-2 text-cyan-400 font-bold mb-1 uppercase text-[10px] tracking-[0.2em]">
-          <Crown size={14} /> Centro de Comando
-        </div>
-        <h1 className="text-3xl font-black text-foreground tracking-tight">
-          Panel Head — <span className="text-cyan-400">CRM Lite</span>
+    <div className="flex flex-col h-full gap-8 max-w-[1600px] mx-auto pb-10">
+      <div className="border-b border-border pb-6">
+        <h1 className="text-3xl font-black text-foreground tracking-tight flex items-center gap-3">
+          <TabIcon className="text-brand shrink-0" size={28} />
+          {tabMeta.label}
         </h1>
+        <p className="text-muted mt-2">{tabMeta.description}</p>
       </div>
 
-      <div className="flex gap-1 bg-surface border border-cyan-500/10 p-1 rounded-xl overflow-x-auto">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => handleTabChange(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
-              activeTab === tab.id
-                ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
-                : 'text-muted hover:text-foreground hover:bg-surface-inset border border-transparent'
-            }`}
-          >
-            <tab.icon size={16} />
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="min-h-[500px]">
-        {activeTab === 'overview' && <OverviewTab />}
-        {activeTab === 'clientes' && <ClientsTab />}
-        {activeTab === 'leads' && <LeadsTab />}
-        {activeTab === 'personnel' && <PersonnelTab />}
-      </div>
+      <div className="min-h-[500px]">{renderTab()}</div>
     </div>
   );
 }

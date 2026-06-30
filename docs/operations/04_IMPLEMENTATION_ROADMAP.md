@@ -2,7 +2,7 @@
 
 Este documento refleja el **estado real del repositorio** respecto al plan original de 4 semanas. La plataforma superó el alcance del MVP inicial: hay 7 dashboards operativos, backend en Supabase (sin Node.js propio) y múltiples integraciones documentadas en guías operativas.
 
-**Última actualización:** Mayo 2026
+**Última actualización:** junio 2026
 
 ---
 
@@ -71,8 +71,8 @@ Este documento refleja el **estado real del repositorio** respecto al plan origi
   - `/legal/terminos`, `/legal/privacidad`, `/legal/riesgos`
   - Banner `RiskDisclaimer` en landings, login y dashboards
   - Centro legal en dashboard: `LegalView`
-  - Referencia: `docs/LEGAL_PUBLICACION.md`
-- [x] **KYC** — upload cliente, revisión CHIEF, Storage, RPCs (`docs/GUIA_KYC.md`)
+  - Referencia: `docs/legal/LEGAL_PUBLICACION.md`
+- [x] **KYC** — upload cliente, revisión CHIEF, Storage, RPCs (`docs/guides/GUIA_PERU_AML_KYC.md`)
 - [x] **Dashboards por rol** (7 niveles RBAC):
 
 | Rol | Ruta | Estado |
@@ -90,15 +90,15 @@ Este documento refleja el **estado real del repositorio** respecto al plan origi
 
 ## Extensiones implementadas (post-plan original)
 
-Funcionalidad añadida después del roadmap de 4 semanas, alineada con `docs/12_REQUISITOS_PARA_INICIAR.md`.
+Funcionalidad añadida después del roadmap de 4 semanas, alineada con `docs/operations/12_REQUISITOS_PARA_INICIAR.md`.
 
 ### Autenticación y onboarding
 
 - [x] Login real + demo por rol (`auth.store.ts`)
 - [x] Registro cliente: `registerClient` + RPC `complete_client_onboarding`
-- [x] Registros web → Head: notificación HEAD/CHIEF, CSV Storage, pestaña `web-registrations` (`docs/GUIA_LEADS_WEB.md`)
+- [x] Registros web → Head: notificación HEAD/CHIEF, CSV Storage, pestaña `web-registrations` (`docs/guides/GUIA_LEADS_WEB.md`)
 - [x] Recuperación de contraseña: `/auth/recuperar`, `/auth/restablecer`
-- [x] Guía: `docs/GUIA_REGISTRO_AUTH.md`
+- [x] Guía: `docs/guides/GUIA_REGISTRO_AUTH.md`
 
 ### Captación y marketing
 
@@ -106,7 +106,7 @@ Funcionalidad añadida después del roadmap de 4 semanas, alineada con `docs/12_
 - [x] Landing de captación **`/registro`** — diseño tipo Fortrade (card centrada, 2 pasos: identidad → credenciales)
   - Componentes: `src/features/landing/components/captacion/`
   - UTM → `interest` en lead; `trackLeadConversion` (GTM)
-- [x] Plan Google Ads documentado — `docs/11_PLAN_MERCADEO_GOOGLE_ADS.md`
+- [x] Plan Google Ads documentado — `docs/business/11_PLAN_MERCADEO_GOOGLE_ADS.md`
 
 ### Wallet y pagos
 
@@ -114,21 +114,21 @@ Funcionalidad añadida después del roadmap de 4 semanas, alineada con `docs/12_
 - [x] UI depósito manual / crypto / retiros — `ClientDashboard`, `WalletDashboard`
 - [x] Edge Functions: `create-deposit`, `nowpayments-webhook`, `approve-transaction`, `request-withdrawal`
 - [x] CHIEF aprueba/rechaza transacciones
-- [ ] **Deploy operativo** NOWPayments (cuenta, secrets, IPN) — ver `docs/GUIA_NOWPAYMENTS.md`
+- [ ] **Deploy operativo** NOWPayments (cuenta, secrets, IPN) — ver `docs/guides/GUIA_NOWPAYMENTS.md`
 
 ### CRM y telefonía
 
 - [x] CRM leads en Supabase — asignación, estados, notas (`leads.service.ts`)
 - [x] Dashboard Agent — cola dialer, callbacks, FTD vía `deposits`
 - [x] **Dialer VoIP Twilio (código)** — `call_logs`, Edge Functions, `useTwilioDialer`, botón Llamar
-- [ ] **Deploy operativo** Twilio (cuenta, número, TwiML App) — ver `docs/GUIA_TWILIO_VOIP.md`
+- [ ] **Deploy operativo** Twilio (cuenta, número, TwiML App) — ver `docs/guides/GUIA_TWILIO_VOIP.md`
 
 ### Notificaciones y reportes
 
 - [x] Tabla `notifications`, Realtime, toasts (`useNotificationRealtime`)
-- [x] Edge Functions + plantillas Resend (`docs/GUIA_NOTIFICACIONES.md`)
+- [x] Edge Functions + plantillas Resend (`docs/guides/19_GUIA_FUNCIONAMIENTO_SISTEMA.md`)
 - [ ] API key Resend en producción — pendiente
-- [x] Reportes CHIEF — CSV/PDF conciliación (`docs/GUIA_REPORTES_Y_REALTIME.md`)
+- [x] Reportes CHIEF — CSV/PDF conciliación (`docs/guides/19_GUIA_FUNCIONAMIENTO_SISTEMA.md`)
 
 ### Servicios de datos
 
@@ -140,17 +140,17 @@ Funcionalidad añadida después del roadmap de 4 semanas, alineada con `docs/12_
 
 ## Pendiente para lanzamiento operativo
 
-Prioridad según `docs/12_REQUISITOS_PARA_INICIAR.md`:
+Prioridad según `docs/operations/12_REQUISITOS_PARA_INICIAR.md`:
 
 | Ítem | Tipo | Guía / acción |
 |------|------|----------------|
-| Cuenta y deploy NOWPayments | Operativo | `docs/GUIA_NOWPAYMENTS.md` |
-| Cuenta y deploy Twilio VoIP | Operativo | `docs/GUIA_TWILIO_VOIP.md` |
-| API key Resend | Operativo | `docs/GUIA_NOTIFICACIONES.md` |
-| Dominio + DNS + deploy frontend | Infra | Cloudflare Pages / Vercel |
+| Cuenta y deploy NOWPayments | Operativo | `docs/guides/GUIA_NOWPAYMENTS.md` |
+| Cuenta y deploy Twilio VoIP | Operativo | `docs/guides/GUIA_TWILIO_VOIP.md` |
+| API key Resend | Operativo | `docs/guides/19_GUIA_FUNCIONAMIENTO_SISTEMA.md` |
+| Deploy frontend Workers | Infra | Hecho � `npm run deploy` |
 | Supabase Pro + migraciones en prod | Infra | SQL en orden del repo |
 | SAS, T&C revisados por abogado | Legal | Ya publicados en web; revisión externa recomendada |
-| Google Ads verificado | Marketing | `docs/11_PLAN_MERCADEO_GOOGLE_ADS.md` |
+| Google Ads verificado | Marketing | `docs/business/11_PLAN_MERCADEO_GOOGLE_ADS.md` |
 
 ---
 
@@ -172,18 +172,18 @@ Prioridad según `docs/12_REQUISITOS_PARA_INICIAR.md`:
 
 | Documento | Contenido |
 |-----------|-----------|
-| [`ARCHITECTURE.md`](../ARCHITECTURE.md) | Arquitectura global y RBAC |
+| [`ARQUITECTURA_LITE.md`](../architecture/ARQUITECTURA_LITE.md) | Arquitectura global y RBAC |
 | [`12_REQUISITOS_PARA_INICIAR.md`](12_REQUISITOS_PARA_INICIAR.md) | Checklist de lanzamiento |
-| [`GUIA_NOWPAYMENTS.md`](GUIA_NOWPAYMENTS.md) | Pasarela crypto |
-| [`GUIA_TWILIO_VOIP.md`](GUIA_TWILIO_VOIP.md) | Dialer agentes |
-| [`GUIA_REGISTRO_AUTH.md`](GUIA_REGISTRO_AUTH.md) | Auth y onboarding |
-| [`GUIA_KYC.md`](GUIA_KYC.md) | Verificación de identidad |
-| [`GUIA_NOTIFICACIONES.md`](GUIA_NOTIFICACIONES.md) | Email y Realtime |
-| [`LEGAL_PUBLICACION.md`](LEGAL_PUBLICACION.md) | URLs legales |
-| [`11_PLAN_MERCADEO_GOOGLE_ADS.md`](11_PLAN_MERCADEO_GOOGLE_ADS.md) | Campañas y landing `/registro` |
+| [`GUIA_NOWPAYMENTS.md`](../guides/GUIA_NOWPAYMENTS.md) | Pasarela crypto |
+| [`GUIA_TWILIO_VOIP.md`](../guides/GUIA_TWILIO_VOIP.md) | Dialer agentes |
+| [`GUIA_REGISTRO_AUTH.md`](../guides/GUIA_REGISTRO_AUTH.md) | Auth y onboarding |
+| [`GUIA_PERU_AML_KYC.md`](../guides/GUIA_PERU_AML_KYC.md) | Verificación de identidad |
+| [`19_GUIA_FUNCIONAMIENTO_SISTEMA.md`](19_GUIA_FUNCIONAMIENTO_SISTEMA.md) | Email y Realtime |
+| [`LEGAL_PUBLICACION.md`](../legal/LEGAL_PUBLICACION.md) | URLs legales |
+| [`11_PLAN_MERCADEO_GOOGLE_ADS.md`](../business/11_PLAN_MERCADEO_GOOGLE_ADS.md) | Campañas y landing `/registro` |
 | [`19_GUIA_FUNCIONAMIENTO_SISTEMA.md`](19_GUIA_FUNCIONAMIENTO_SISTEMA.md) | Qué es cada pantalla y módulo |
-| [`GUIA_LEADS_WEB.md`](GUIA_LEADS_WEB.md) | Registro `/registro` → lead + CSV + panel Head |
+| [`GUIA_LEADS_WEB.md`](../guides/GUIA_LEADS_WEB.md) | Registro `/registro` → lead + CSV + panel Head |
 
 ---
 
-*Roadmap alineado al estado del código — InvestPRO — Mayo 2026*
+*Roadmap alineado al estado del código — InvestPRO — junio 2026*

@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Loader2, Phone, Mail, Wallet, FileText } from 'lucide-react';
-import { getClientBundle } from '../../../core/supabase/services/staff.service';
-import type { ClientBundle } from '../../../core/supabase/services/staff.service';
-import { formatUsd } from '../../wallet/utils/format-usd';
-import type { Transaction } from '../../../core/supabase/services/wallet.service';
+import { ArrowLeft, FileText, Loader2 } from 'lucide-react';
+import { getClientBundle, type ClientBundle } from '../../../core/supabase/services/staff.service';
+import { ClientDetailHeader } from '../components/head/client-detail/ClientDetailHeader';
+import { ClientWalletPanel } from '../components/head/client-detail/ClientWalletPanel';
+import { ClientSecurityPanel } from '../components/head/client-detail/ClientSecurityPanel';
+import { ClientPositionsPanel } from '../components/head/client-detail/ClientPositionsPanel';
+import { ClientTransactionsPanel } from '../components/head/client-detail/ClientTransactionsPanel';
+import { ClientCallsPanel } from '../components/head/client-detail/ClientCallsPanel';
 
 export function HeadClientDetailPage() {
   const { userId } = useParams<{ userId: string }>();
@@ -13,20 +16,23 @@ export function HeadClientDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadBundle = useCallback(async () => {
     if (!userId) return;
-    let cancelled = false;
     setLoading(true);
-    void getClientBundle(userId).then((data: ClientBundle | null) => {
-      if (cancelled) return;
-      if (!data) setError('No se pudo cargar el cliente');
+    setError(null);
+    const data = await getClientBundle(userId);
+    if (!data) {
+      setError('No se pudo cargar el cliente');
+      setBundle(null);
+    } else {
       setBundle(data);
-      setLoading(false);
-    });
-    return () => {
-      cancelled = true;
-    };
+    }
+    setLoading(false);
   }, [userId]);
+
+  useEffect(() => {
+    void loadBundle();
+  }, [loadBundle]);
 
   if (loading) {
     return (
@@ -37,7 +43,7 @@ export function HeadClientDetailPage() {
     );
   }
 
-  if (error || !bundle) {
+  if (error || !bundle || !userId) {
     return (
       <div className="text-center py-24">
         <p className="text-rose-400 mb-4">{error ?? 'Cliente no encontrado'}</p>
@@ -52,7 +58,8 @@ export function HeadClientDetailPage() {
     );
   }
 
-  const { profile, wallet, lead, transactions, calls } = bundle;
+  const { profile, wallet, lead, transactions, calls, positions_open_count, positions_closed_count } =
+    bundle;
 
   return (
     <div className="space-y-6 max-w-5xl">
@@ -65,26 +72,18 @@ export function HeadClientDetailPage() {
         Volver a clientes
       </button>
 
-      <div className="bg-surface border border-border rounded-xl p-6">
-        <h2 className="text-2xl font-black text-foreground">{profile.full_name}</h2>
-        <div className="flex flex-wrap gap-4 mt-3 text-sm text-muted">
-          <span className="inline-flex items-center gap-1.5">
-            <Mail size={14} />
-            {profile.email}
-          </span>
-          {profile.phone && (
-            <span className="inline-flex items-center gap-1.5">
-              <Phone size={14} />
-              {profile.phone}
-            </span>
-          )}
-          <span className="inline-flex items-center gap-1.5">
-            <Wallet size={14} />
-            Live: {formatUsd(Number(wallet?.balance ?? 0))} · Demo:{' '}
-            {formatUsd(Number(wallet?.demo_balance ?? 0))}
-          </span>
-        </div>
+      <ClientDetailHeader profile={profile} wallet={wallet} />
+
+      <div className="grid lg:grid-cols-2 gap-4">
+        <ClientWalletPanel clientId={userId} wallet={wallet} onUpdated={() => void loadBundle()} />
+        <ClientSecurityPanel clientId={userId} profile={profile} onUpdated={() => void loadBundle()} />
       </div>
+
+      <ClientPositionsPanel
+        clientId={userId}
+        openCount={positions_open_count}
+        closedCount={positions_closed_count}
+      />
 
       {lead && (
         <div className="bg-surface border border-border rounded-xl p-5">
@@ -101,41 +100,8 @@ export function HeadClientDetailPage() {
       )}
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-surface border border-border rounded-xl p-5">
-          <h3 className="font-bold mb-3">Transacciones recientes</h3>
-          <div className="space-y-2 max-h-64 overflow-y-auto">
-            {transactions.length === 0 && (
-              <p className="text-sm text-muted">Sin transacciones.</p>
-            )}
-            {transactions.map((tx: Transaction) => (
-              <div
-                key={tx.id}
-                className="flex justify-between text-sm border-b border-border/50 pb-2"
-              >
-                <span className="capitalize">
-                  {tx.type} · {tx.status}
-                </span>
-                <span className="font-mono">{formatUsd(Number(tx.amount))}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-surface border border-border rounded-xl p-5">
-          <h3 className="font-bold mb-3">Llamadas CRM</h3>
-          <div className="space-y-2 max-h-64 overflow-y-auto">
-            {calls.length === 0 && <p className="text-sm text-muted">Sin llamadas registradas.</p>}
-            {calls.map((c: ClientBundle['calls'][number]) => (
-              <div key={c.id} className="text-sm border-b border-border/50 pb-2">
-                <span className="text-foreground">{c.direction}</span>
-                <span className="text-muted"> · {c.status}</span>
-                {c.duration_seconds != null && (
-                  <span className="text-muted"> · {c.duration_seconds}s</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        <ClientTransactionsPanel transactions={transactions} />
+        <ClientCallsPanel calls={calls} />
       </div>
     </div>
   );

@@ -13,13 +13,13 @@ La simulación RBAC (botones de 7 niveles en login) fue **retirada**. Solo hay a
 
 ### Desarrollo rápido (7 roles @investpro.com)
 
-Ver **`docs/USUARIOS_PRUEBA_INVESTPRO.md`** — contraseña `Dev2026!Inv`, script `npm run seed:dev-users` y SQL post-seed.
+Ver **`docs/operations/USUARIOS_PRUEBA_INVESTPRO.md`** — contraseña `Dev2026!Inv`, script `npm run seed:dev-users` y SQL post-seed.
 
 ### Alta manual
 
 1. Crear usuario en **Supabase Dashboard → Authentication → Users** (email + contraseña).
 2. Tras el primer login, la app ejecuta `ensure_my_profile` y crea fila en `profiles`.
-3. Asignar rol en SQL (ver `docs/GUIA_STAFF_AUTH.md`):
+3. Asignar rol en SQL (ver `docs/guides/GUIA_STAFF_AUTH.md`):
 
 ```sql
 UPDATE public.profiles SET role = 'HEAD' WHERE email = 'tu@correo.com';
@@ -46,4 +46,4 @@ VITE_APP_URL=http://localhost:5173
 
 ## Vaciar todo y empezar de cero
 
-- **`supabase/scripts/reset_all_operational_data.sql`** — ver `docs/RESET_DATOS_OPERATIVOS.md`
+- **`supabase/scripts/reset_all_operational_data.sql`** — ver `docs/operations/RESET_DATOS_OPERATIVOS.md`

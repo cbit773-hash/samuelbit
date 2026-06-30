@@ -9,9 +9,9 @@ Guía operativa para activar depósitos crypto (NOWPayments), billetera en Supab
 | Documento | Para qué sirve |
 |-----------|----------------|
 | **Este archivo** (`GUIA_NOWPAYMENTS.md`) | Paso a paso completo — empieza aquí |
-| [`supabase/PAYMENTS_DEPLOY.md`](../supabase/PAYMENTS_DEPLOY.md) | Referencia técnica deploy (comandos, URLs, SQL verify) |
-| [`13_PASARELA_DE_PAGOS.md`](13_PASARELA_DE_PAGOS.md) | Arquitectura de negocio (crypto vs manual vs Stripe) |
-| [`12_REQUISITOS_PARA_INICIAR.md`](12_REQUISITOS_PARA_INICIAR.md) | Checklist general de lanzamiento |
+| [`operations/DEVOPS.md`](../operations/DEVOPS.md) | Referencia técnica deploy (comandos, URLs, scripts) |
+| [`13_PASARELA_DE_PAGOS.md`](../business/13_PASARELA_DE_PAGOS.md) | Arquitectura de negocio (crypto vs manual vs Stripe) |
+| [`12_REQUISITOS_PARA_INICIAR.md`](../operations/12_REQUISITOS_PARA_INICIAR.md) | Checklist general de lanzamiento |
 
 ---
 

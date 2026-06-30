@@ -33,34 +33,34 @@
 | Dashboard HEAD | ✅ En vivo | KPIs, personal, leads, depósitos desde Supabase |
 | Dashboard CHIEF | ✅ En vivo | Validación de caja + auditoría SLA |
 | Landing page de captación | ✅ Lista | Ruta `/registro`, registro Auth + onboarding RPC + UTM tracking |
-| Registro cliente (Auth + wallet) | ✅ Hecho (código) | — | `registerClient`, RPC `complete_client_onboarding` · `docs/GUIA_REGISTRO_AUTH.md` |
-| Recuperación de contraseña | ✅ Hecho (código) | — | `/auth/recuperar`, `/auth/restablecer` · ver `docs/GUIA_REGISTRO_AUTH.md` |
+| Registro cliente (Auth + wallet) | ✅ Hecho (código) | — | `registerClient`, RPC `complete_client_onboarding` · `docs/guides/GUIA_REGISTRO_AUTH.md` |
+| Recuperación de contraseña | ✅ Hecho (código) | — | `/auth/recuperar`, `/auth/restablecer` · ver `docs/guides/GUIA_REGISTRO_AUTH.md` |
 | Sistema de Wallet | ✅ En vivo | Tablas `wallets`, `transactions` + RPCs atómicas + RLS fail-closed |
 | Integración NOWPayments (código) | ✅ Implementado | Edge Functions: `create-deposit`, `nowpayments-webhook`, `approve-transaction` |
 | UI Wallet ClientAccountPage | ✅ Conectada | Balance real, depósito crypto/manual, retiros, historial (`/dashboard/account?tab=...`) |
 | Panel transacciones CHIEF | ✅ Conectado | Aprobar/rechazar depósitos manuales y retiros desde `transactions` |
-| Arquitectura de pagos | ✅ Documentado | NOWPayments + Manual — ver `docs/GUIA_NOWPAYMENTS.md` |
+| Arquitectura de pagos | ✅ Documentado | NOWPayments + Manual — ver `docs/guides/GUIA_NOWPAYMENTS.md` |
 | Servicios de datos | ✅ Completos | 6 servicios: profiles, leads, deposits, positions, teams, wallet + `payment.service` |
 | Hooks de Supabase | ✅ Listos | `useSupabaseQuery` + `useSupabaseMutation` genéricos |
 | Tipos TypeScript | ✅ Listos | `database.types.ts` con todos los tipos del schema |
-| Plan de mercadeo | ✅ Documentado | Google Ads $5M COP, 8 semanas (`docs/11_PLAN_MERCADEO_GOOGLE_ADS.md`) |
-| Dashboard Agent → Supabase | ✅ Hecho | — | 10 herramientas Arsenal · migración `202605370001_agent_closer_ops.sql` · `docs/GUIA_AGENT_CLOSER_E2E.md` |
-| Dialer VoIP Twilio (código) | ✅ Hecho | — | `AgentDialerPanel` + `useTwilioDialer` · requiere secrets Twilio · `docs/GUIA_TWILIO_VOIP.md` |
+| Plan de mercadeo | ✅ Documentado | Google Ads $5M COP, 8 semanas (`docs/business/11_PLAN_MERCADEO_GOOGLE_ADS.md`) |
+| Dashboard Agent → Supabase | ✅ Hecho | — | 10 herramientas Arsenal · migración `202605370001_agent_closer_ops.sql` · `docs/guides/GUIA_AGENT_CLOSER_E2E.md` |
+| Dialer VoIP Twilio (código) | ✅ Hecho | — | `AgentDialerPanel` + `useTwilioDialer` · requiere secrets Twilio · `docs/guides/GUIA_TWILIO_VOIP.md` |
 | Leads demo agente dev | ✅ Script | — | `supabase/scripts/seed_agent_demo_leads.sql` tras `seed:dev-users` |
 | Dashboard Client → Trading | ✅ Hecho | — | `useClientPositions`, terminal abre/cierra en BD, portafolio y KPIs en ClientDashboard |
-| Sistema de notificaciones | ✅ Hecho (código) | — | Resend + tabla `notifications` + Edge Functions · ver `docs/GUIA_NOTIFICACIONES.md` (falta API key Resend) |
+| Sistema de notificaciones | ✅ Hecho (código) | — | Resend + tabla `notifications` + Edge Functions · ver `docs/guides/19_GUIA_FUNCIONAMIENTO_SISTEMA.md` (falta API key Resend) |
 | KYC / Verificación de identidad | ✅ Hecho (código) | — | Storage `kyc-documents`, 4 docs, RPC approve/reject, UI Cliente + CHIEF · SQL `202605230001_kyc.sql` |
 | Reportes exportables (CSV/PDF) | ✅ Hecho | — | CHIEF → Reporte conciliación: CSV transacciones/depositos + PDF |
 | WebSocket tiempo real | ✅ Hecho | — | Binance WS + reconexión + badge live; Realtime notificaciones + toast |
-| Documentos legales (T&C, Privacidad, Riesgo) | ✅ Publicados | — | `/legal/terminos`, `/legal/privacidad`, `/legal/riesgos` + banner `RiskDisclaimer` · `docs/LEGAL_PUBLICACION.md` |
+| Documentos legales (T&C, Privacidad, Riesgo) | ✅ Publicados | — | `/legal/terminos`, `/legal/privacidad`, `/legal/riesgos` + banner `RiskDisclaimer` · `docs/legal/LEGAL_PUBLICACION.md` |
 
 ### 1.2 Lo que FALTA por implementar 🔧
 
 | Componente | Prioridad | Esfuerzo | Detalle |
 |-----------|-----------|----------|---------|
-| Cuenta NOWPayments + API keys | 🔴 Crítica | 1-2 días | Registro, API key, wallet USDT TRC20, IPN secret → `docs/GUIA_NOWPAYMENTS.md` Fase 1 |
-| Deploy NOWPayments en producción | 🔴 Crítica | 1 día | Secrets, Edge Functions, `.env` frontend → `docs/GUIA_NOWPAYMENTS.md` Fases 2-5 |
-| Cuenta Twilio + deploy dialer VoIP | 🔴 Crítica | 1-2 días | Número, API Key, TwiML App, secrets, deploy → `docs/GUIA_TWILIO_VOIP.md` |
+| Cuenta NOWPayments + API keys | 🔴 Crítica | 1-2 días | Registro, API key, wallet USDT TRC20, IPN secret → `docs/guides/GUIA_NOWPAYMENTS.md` Fase 1 |
+| Deploy NOWPayments en producción | 🔴 Crítica | 1 día | Secrets, Edge Functions, `.env` frontend → `docs/guides/GUIA_NOWPAYMENTS.md` Fases 2-5 |
+| Cuenta Twilio + deploy dialer VoIP | 🔴 Crítica | 1-2 días | Número, API Key, TwiML App, secrets, deploy → `docs/guides/GUIA_TWILIO_VOIP.md` |
 
 
 ### 1.3 Servicios a Contratar (Día 1)
@@ -68,7 +68,7 @@
 | Servicio | Proveedor | Costo/mes (COP) | Para qué |
 |---------|-----------|-----------------|----------|
 | Base de datos | Supabase Pro | $92,500 | Datos de toda la operación |
-| Hosting | Cloudflare Pages | $0 | Servir la app al mundo |
+| Hosting | Cloudflare Workers | $0 | Servir la app al mundo |
 | CDN + SSL | Cloudflare Free | $0 | Velocidad y seguridad |
 | Dominio `.com` | Namecheap/Cloudflare | $3,700/mes | `investpro.com` o similar |
 | Email corporativo | Zoho Mail (5 cuentas) | $18,500 | head@, chief@, soporte@, etc. |
@@ -157,8 +157,8 @@
 | Reserva de contingencia | $300,000 |
 | **TOTAL MERCADEO** | **$5,000,000** |
 
-*(Detalle completo en `docs/11_PLAN_MERCADEO_GOOGLE_ADS.md`)*
-*(Pasarela de pagos en `docs/13_PASARELA_DE_PAGOS.md`)*
+*(Detalle completo en `docs/business/11_PLAN_MERCADEO_GOOGLE_ADS.md`)*
+*(Pasarela de pagos en `docs/business/13_PASARELA_DE_PAGOS.md`)*
 
 ### 4.2 Requisitos Previos para Google Ads
 
@@ -214,7 +214,7 @@
 | 2 | Contratar Supabase Pro ($25 USD/mes) | Dev |
 | 3 | Configurar email corporativo (Zoho/Google) | Dev |
 | 3 | Ejecutar `schema.sql` + `seed_data.sql` en Supabase | Dev |
-| 4-5 | Deploy pasarela NOWPayments (Fases 1-5 de `docs/GUIA_NOWPAYMENTS.md`) | Dev |
+| 4-5 | Deploy pasarela NOWPayments (Fases 1-5 de `docs/guides/GUIA_NOWPAYMENTS.md`) | Dev |
 | 5-7 | Crear Landing Page de captación | Dev + Diseñador |
 | 7-10 | Documentos legales (T&C, Privacidad, Disclaimers) | Abogado |
 | 10-14 | Configurar Google Ads + Google Tag Manager | Chief/Media Buyer |
@@ -254,7 +254,7 @@
 ### Técnico 💻
 - [ ] Dominio comprado y DNS configurado
 - [ ] Supabase Pro activado y schema ejecutado
-- [ ] Frontend desplegado en Cloudflare Pages / Vercel
+- [ ] Frontend desplegado en Cloudflare Workers (`cbit773`)
 - [x] Landing page con formulario → Supabase (`/registro`) ✅
 - [x] Schema de wallet y transacciones creado ✅
 - [x] Servicios de wallet implementados (depositar, retirar, aprobar) ✅
@@ -303,7 +303,7 @@
 | Falla técnica en producción | Media | Alto | 2 devs en standby, monitoreo 24/7 con Sentry |
 | Agentes no cierran ventas | Media | Alto | Floor Manager supervisa en vivo, coaching diario |
 | Problemas con pasarela de pago | Baja | Crítico | NOWPayments crypto + depósito manual como backup; Stripe en Fase 2 |
-| Webhook IPN no acredita saldo | Media | Crítico | Ver `docs/GUIA_NOWPAYMENTS.md` Fase 6 — HMAC, secrets, logs webhook |
+| Webhook IPN no acredita saldo | Media | Crítico | Ver `docs/guides/GUIA_NOWPAYMENTS.md` Fase 6 — HMAC, secrets, logs webhook |
 | Base de datos comprometida | Baja | Crítico | RLS activo, backups diarios, VPN para acceso admin |
 
 ---
@@ -331,7 +331,7 @@
 | SQL en Supabase | ✅ Migraciones aplicadas |
 | Cuenta NOWPayments + deploy | 🔧 Pendiente |
 
-**Guía paso a paso (empezar aquí):** [`docs/GUIA_NOWPAYMENTS.md`](GUIA_NOWPAYMENTS.md)
+**Guía paso a paso (empezar aquí):** [`docs/guides/GUIA_NOWPAYMENTS.md`](../guides/GUIA_NOWPAYMENTS.md)
 
 | Fase | Contenido |
 |------|-----------|
@@ -343,8 +343,8 @@
 | 5 | Prueba E2E |
 | 6 | Troubleshooting |
 
-**Referencia técnica:** [`supabase/PAYMENTS_DEPLOY.md`](../supabase/PAYMENTS_DEPLOY.md)  
-**Arquitectura:** [`docs/13_PASARELA_DE_PAGOS.md`](13_PASARELA_DE_PAGOS.md)
+**Referencia técnica:** [`operations/DEVOPS.md`](DEVOPS.md)  
+**Arquitectura:** [`docs/business/13_PASARELA_DE_PAGOS.md`](../business/13_PASARELA_DE_PAGOS.md)
 
 ---
 

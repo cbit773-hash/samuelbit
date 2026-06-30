@@ -1,6 +1,6 @@
 # Estado InvestPRO Lite
 
-> Snapshot operativo — versión lite alineada a Capital Prime (HEAD CRM básico)  
+> Snapshot operativo InvestPRO Lite — HEAD CRM básico, terminal y wallet  
 > **Última actualización:** junio 2026 — go-live ejecutado
 
 ## Producción

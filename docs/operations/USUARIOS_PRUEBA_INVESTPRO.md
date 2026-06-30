@@ -82,7 +82,7 @@ SELECT COUNT(*) FROM public.leads
 WHERE assigned_to = (SELECT id FROM public.profiles WHERE email = 'agent@investpro.com');
 ```
 
-Debe ser **> 0**. Luego login AGENT → `/dashboard/agent?tab=dialer`. Checklist completo: `[GUIA_AGENT_CLOSER_E2E.md](GUIA_AGENT_CLOSER_E2E.md)`.
+Debe ser **> 0**. Luego login AGENT → `/dashboard/agent?tab=dialer`. Checklist completo: `[GUIA_AGENT_CLOSER_E2E.md](../guides/GUIA_AGENT_CLOSER_E2E.md)`.
 
 ---
 
@@ -109,7 +109,7 @@ UPDATE public.profiles SET role = 'HEAD', full_name = 'Samuel Director'
 WHERE email = 'head@investpro.com';
 ```
 
-Ver también `[GUIA_STAFF_AUTH.md](GUIA_STAFF_AUTH.md)`.
+Ver también `[GUIA_STAFF_AUTH.md](../guides/GUIA_STAFF_AUTH.md)`.
 
 ---
 

@@ -107,12 +107,31 @@ async function fetchUserRole(userId: string): Promise<Role> {
   return 'CLIENT';
 }
 
+async function fetchClientBlocked(userId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('is_blocked')
+    .eq('id', userId)
+    .maybeSingle();
+  if (error) {
+    logAuthError('profiles.is_blocked', error.message);
+    return false;
+  }
+  return data?.is_blocked === true;
+}
+
 async function applySession(session: Session | null) {
   if (!session?.user || !session.access_token) {
     return { user: null, role: null, isAuthenticated: false };
   }
 
   const role = await fetchUserRole(session.user.id);
+
+  if (role === 'CLIENT' && (await fetchClientBlocked(session.user.id))) {
+    await supabase.auth.signOut();
+    return { user: null, role: null, isAuthenticated: false };
+  }
+
   return {
     user: session.user,
     role,
@@ -163,6 +182,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         throw new Error('No se recibió sesión tras el login. Revisa Confirm email en Supabase Auth.');
       }
       const next = await applySession(data.session);
+      if (!next.isAuthenticated) {
+        throw new Error('Tu cuenta está suspendida. Contacta a soporte.');
+      }
       set({ ...next, isLoading: false });
       console.log(`[InvestPRO Auth] Sesión Supabase: ${data.session.user.email}`);
     } catch (e) {

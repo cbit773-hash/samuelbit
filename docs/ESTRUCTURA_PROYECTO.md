@@ -13,7 +13,7 @@
 | **Rutas** | `src/app/router.tsx` | Registra `account`, `trade`, `client` |
 | **Datos compartidos** | `src/features/client/context/ClientDataContext.tsx` | Wallet, perfil, refresh |
 | **Pestañas de cuenta** | `src/features/client/tabs/*.tsx` | Resumen, depósito, retiro, etc. |
-| **Documentación del rol** | `docs/17_ROL_CLIENT_INVESTOR.md` | Especificación funcional |
+| **Documentación del rol** | `docs/roles/17_ROL_CLIENT_INVESTOR.md` | Especificación funcional |
 
 La página que hoy muestra la UI del inversor es **`ClientAccountPage.tsx`**, que compone las pestañas definidas en `src/features/client/config/account-tabs.ts`.
 
@@ -135,7 +135,7 @@ src/features/client/
 
 ## `src/features/trading/` — Terminal de mercado (detalle)
 
-Ruta: `/dashboard/trade` · Guía: [GUIA_TRADINGVIEW_TERMINAL_MERCADO.md](./GUIA_TRADINGVIEW_TERMINAL_MERCADO.md)
+Ruta: `/dashboard/trade` · Guía: [GUIA_TRADINGVIEW_TERMINAL_MERCADO.md](./guides/GUIA_TRADINGVIEW_TERMINAL_MERCADO.md)
 
 ```
 src/features/trading/
@@ -320,44 +320,34 @@ supabase/
 
 ---
 
-## `docs/` — Documentación
+## `docs/` — Documentación InvestPRO Lite
 
-### Índice de guías operativas
+Índice maestro: [README.md](./README.md)
 
-| Archivo | Tema |
-|---------|------|
-| [BRIEF_TECNICO_ARQUITECTONICO.md](./BRIEF_TECNICO_ARQUITECTONICO.md) | **Brief maestro** — arquitectura senior, ADRs, flujos y playbook de replicación |
-| [ESTRUCTURA_PROYECTO.md](./ESTRUCTURA_PROYECTO.md) | **Este archivo** — árbol de carpetas y mapa de código |
-| [17_ROL_CLIENT_INVESTOR.md](./17_ROL_CLIENT_INVESTOR.md) | Rol inversor / panel cliente |
-| [GUIA_TERMINAL_FORTADE.md](./GUIA_TERMINAL_FORTADE.md) | Terminal Fortrade |
-| [GUIA_TRADINGVIEW_TERMINAL_MERCADO.md](./GUIA_TRADINGVIEW_TERMINAL_MERCADO.md) | Gráficos, mercado, terminal |
-| [GUIA_LEADS_WEB.md](./GUIA_LEADS_WEB.md) | Captación y leads web |
-| [GUIA_KYC.md](./GUIA_KYC.md) | Verificación KYC |
-| [GUIA_REGISTRO_AUTH.md](./GUIA_REGISTRO_AUTH.md) | Auth y registro |
-| [GUIA_STAFF_AUTH.md](./GUIA_STAFF_AUTH.md) | Auth staff |
-| [GUIA_PERU_PAGOS.md](./GUIA_PERU_PAGOS.md) | Pagos Perú |
-| [GUIA_PERU_AML_KYC.md](./GUIA_PERU_AML_KYC.md) | AML/KYC Perú |
-| [GUIA_NOWPAYMENTS.md](./GUIA_NOWPAYMENTS.md) | Crypto / NOWPayments |
-| [GUIA_TWILIO_VOIP.md](./GUIA_TWILIO_VOIP.md) | Llamadas Twilio |
-| [USUARIOS_PRUEBA_INVESTPRO.md](./USUARIOS_PRUEBA_INVESTPRO.md) | Usuarios de prueba |
-| [19_GUIA_FUNCIONAMIENTO_SISTEMA.md](./19_GUIA_FUNCIONAMIENTO_SISTEMA.md) | Funcionamiento global |
+| Carpeta | Contenido |
+|---------|-----------|
+| [architecture/](./architecture/) | ARQUITECTURA_LITE, ADRS, estándares, BD, seguridad |
+| [operations/](./operations/) | Estado prod, DevOps, roadmap, setup, requisitos |
+| [roles/](./roles/) | RBAC y fichas por rol |
+| [guides/](./guides/) | Guías operativas (auth, trading, pagos, Perú) |
+| [business/](./business/) | Lógica de negocio, costos, marketing, pasarela |
+| [design/](./design/) | Sistema de diseño InvestPRO |
+| [legal/](./legal/) | Publicación legal |
 
-### Documentos de arquitectura y roles (serie numerada)
+Documentos raíz: [BRIEF_INVESTPRO_LITE.md](./BRIEF_INVESTPRO_LITE.md) · [ESTRUCTURA_PROYECTO.md](./ESTRUCTURA_PROYECTO.md)
 
 ```
 docs/
-├── BRIEF_TECNICO_ARQUITECTONICO.md
-├── 01_TECHNICAL_STANDARDS.md
-├── 02_BUSINESS_LOGIC.md
-├── 03_DESIGN_SYSTEM.md
-├── 04_IMPLEMENTATION_ROADMAP.md
-├── 05_PROJECT_SETUP_GUIDE.md
-├── 06_DATABASE_ARCHITECTURE.md
-├── 07_SECURITY_INFRASTRUCTURE.md
-├── 08_ROLES_Y_FUNCIONES.md
-├── 09_ROL_HEAD_SOVEREIGN_NODE.md … 18_MANEJO_BROKER_SISTEMA_AGRESIVO.md
-├── 19_GUIA_FUNCIONAMIENTO_SISTEMA.md
-└── GUIA_*.md, INVESTPRO_DESIGN_SYSTEM.md, BOLT_DESIGN_SYSTEM.md, …
+├── README.md
+├── BRIEF_INVESTPRO_LITE.md
+├── ESTRUCTURA_PROYECTO.md
+├── architecture/
+├── operations/
+├── roles/
+├── guides/
+├── business/
+├── design/
+└── legal/
 ```
 
 ---

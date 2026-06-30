@@ -7,7 +7,6 @@ import {
   PhoneCall,
   ListChecks,
   Target,
-  Crown,
   Headphones,
   BarChart3,
   ArrowUpCircle,
@@ -20,6 +19,7 @@ import {
 } from 'lucide-react';
 import type { Role } from '../../features/auth/store/auth.store';
 import { CLIENT_PATHS } from '../routing/paths';
+import { HEAD_TABS, headTabToPath } from '../../features/crm/config/head-tabs.config';
 
 export { ROLE_HOME, getRoleHome, CLIENT_PATHS } from '../routing/paths';
 
@@ -30,10 +30,13 @@ export interface NavItem {
   section?: string;
 }
 
-export interface IconRailItem {
-  to: string;
-  label: string;
-  icon: LucideIcon;
+function getHeadNavItems(): NavItem[] {
+  return HEAD_TABS.map((tab) => ({
+    to: headTabToPath(tab.id),
+    label: tab.label,
+    icon: tab.icon,
+    ...('section' in tab && tab.section ? { section: tab.section } : {}),
+  }));
 }
 
 export function getRoleNavItems(role: Role): NavItem[] {
@@ -66,36 +69,24 @@ export function getRoleNavItems(role: Role): NavItem[] {
     case 'FLOOR_MANAGER':
       return [
         { to: '/dashboard/floor?tab=monitor', label: 'Monitor In-Live', icon: Users, section: 'Piso' },
-        { to: '/dashboard/floor?tab=reasignacion', label: 'Reasignaci├│n', icon: ListChecks },
+        { to: '/dashboard/floor?tab=reasignacion', label: 'Reasignación', icon: ListChecks },
       ];
     case 'MANAGER':
       return [
-        { to: '/dashboard/manager', label: 'Metas y Capacitaci├│n', icon: Target, section: 'Direcci├│n' },
+        { to: '/dashboard/manager', label: 'Metas y Capacitación', icon: Target, section: 'Dirección' },
       ];
     case 'CHIEF':
       return [
-        { to: '/dashboard/chief', label: 'Dep├│sitos y Leads', icon: ListChecks, section: 'Ejecutivo' },
-        { to: '/dashboard/supervisor-market', label: 'Mercado (supervisor)', icon: LineChart },
-        { to: '/dashboard/head?tab=web-registrations', label: 'Registros Web', icon: Globe },
+        { to: '/dashboard/chief', label: 'Depósitos y Leads', icon: ListChecks, section: 'Ejecutivo' },
+        { to: headTabToPath('web-registrations'), label: 'Registros Web', icon: Globe },
+        { to: '/dashboard/supervisor-market', label: 'Mercado (supervisor)', icon: LineChart, section: 'Mercado' },
       ];
     case 'HEAD':
-      return [
-        { to: '/dashboard/head?tab=overview', label: 'Centro de Comando', icon: Crown, section: 'Alta dirección' },
-        { to: '/dashboard/head?tab=clientes', label: 'Clientes', icon: UserCircle },
-        { to: '/dashboard/head?tab=leads', label: 'CRM & Leads', icon: ListChecks },
-        { to: '/dashboard/head?tab=personnel', label: 'Personal', icon: Users },
-      ];
+      return getHeadNavItems();
     default:
       return [];
   }
 }
-
-const CLIENT_RAIL_PATHS = [
-  CLIENT_PATHS.trade,
-  CLIENT_PATHS.accountTab('resumen'),
-  CLIENT_PATHS.accountTab('depositar'),
-  CLIENT_PATHS.accountTab('notificaciones'),
-] as const;
 
 export function getRoleDisplayLabel(role: Role): string {
   const labels: Record<Role, string> = {
@@ -108,17 +99,4 @@ export function getRoleDisplayLabel(role: Role): string {
     HEAD: 'Head',
   };
   return labels[role] ?? role;
-}
-
-export function getIconRailItems(role: Role): IconRailItem[] {
-  const nav = getRoleNavItems(role);
-  if (role === 'CLIENT') {
-    return CLIENT_RAIL_PATHS.map((path) => {
-      const item = nav.find((n) => n.to === path);
-      return item
-        ? { to: item.to, label: item.label, icon: item.icon }
-        : { to: path, label: path, icon: LineChart };
-    }).filter((i) => i.label !== i.to);
-  }
-  return nav.slice(0, 5).map(({ to, label, icon }) => ({ to, label, icon }));
 }

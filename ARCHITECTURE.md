@@ -1,4 +1,6 @@
-# ARCHITECTURE.md — InvesPro Trading Platform
+# ARCHITECTURE.md — InvestPRO Lite (legacy v1)
+
+> **Documento legacy** (abr 2026). Para arquitectura actual ver [docs/architecture/ARQUITECTURA_LITE.md](docs/architecture/ARQUITECTURA_LITE.md) y [docs/BRIEF_INVESTPRO_LITE.md](docs/BRIEF_INVESTPRO_LITE.md).
 
 > **Versión:** 1.0.0  
 > **Fecha:** 2026-04  

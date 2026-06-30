@@ -2,7 +2,7 @@
 
 ## Supabase CLI 403
 
-- Causa: token de otra cuenta (ej. capitalp78 vs cbit773-hash)
+- Causa: token de otra cuenta (ej. cuenta GitHub ajena vs cbit773-hash)
 - Fix: generar `SUPABASE_ACCESS_TOKEN` en cuenta dueña del proyecto InvesPro
 - Login: `npx supabase login --token sbp_...`
 

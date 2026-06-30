@@ -9,9 +9,9 @@ Activar llamadas salientes reales desde el **Auto-Dialer** del agente (WebRTC + 
 | Documento | Para qué sirve |
 |-----------|----------------|
 | **Este archivo** (`GUIA_TWILIO_VOIP.md`) | Paso a paso completo — empieza aquí |
-| [`10_COSTOS_OPERATIVOS_TECNICOS.md`](10_COSTOS_OPERATIVOS_TECNICOS.md) | Costos estimados del dialer |
-| [`14_ROL_AGENT_CLOSER.md`](14_ROL_AGENT_CLOSER.md) | Flujo operativo del agente |
-| [`12_REQUISITOS_PARA_INICIAR.md`](12_REQUISITOS_PARA_INICIAR.md) | Checklist de lanzamiento |
+| [`10_COSTOS_OPERATIVOS_TECNICOS.md`](../business/10_COSTOS_OPERATIVOS_TECNICOS.md) | Costos estimados del dialer |
+| [`14_ROL_AGENT_CLOSER.md`](../roles/14_ROL_AGENT_CLOSER.md) | Flujo operativo del agente |
+| [`12_REQUISITOS_PARA_INICIAR.md`](../operations/12_REQUISITOS_PARA_INICIAR.md) | Checklist de lanzamiento |
 
 ---
 

@@ -53,6 +53,10 @@ export interface Profile {
   kyc_rejection_reason?: string | null;
   created_at: string;
   updated_at: string;
+  is_blocked?: boolean;
+  blocked_at?: string | null;
+  blocked_by?: string | null;
+  block_reason?: string | null;
 }
 
 export interface KycDocument {

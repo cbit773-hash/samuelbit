@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { IconRail } from './IconRail';
 import { RoleNav } from './RoleNav';
 import { AccountMetricsBar } from './AccountMetricsBar';
 import { MobileNavDrawer } from './MobileNavDrawer';
@@ -27,7 +26,6 @@ export function PlatformShell({ fullBleed = false, showMetricsBar = true, childr
       className="flex h-screen w-full overflow-hidden text-[#f5f6f4]"
       style={{ background: boltTheme.bgShell }}
     >
-      <IconRail />
       <RoleNav collapsed={isTradeRoute} />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <div

@@ -10,7 +10,7 @@
 
 ## Shell unificada
 
-Todos los roles usan `PlatformShell` (icon rail + navegación + barra de métricas).
+Todos los roles usan `PlatformShell` (sidebar único por rol + barra de métricas).
 
 Variable de entorno:
 

@@ -212,7 +212,7 @@ CREATE OR REPLACE FUNCTION public.staff_list_leads(
 )
 RETURNS SETOF public.leads
 LANGUAGE plpgsql
-STABLE
+VOLATILE
 SECURITY DEFINER
 SET search_path = public
 AS $$
@@ -232,7 +232,7 @@ $$;
 CREATE OR REPLACE FUNCTION public.staff_get_lead(p_lead_id UUID)
 RETURNS public.leads
 LANGUAGE plpgsql
-STABLE
+VOLATILE
 SECURITY DEFINER
 SET search_path = public
 AS $$
@@ -318,7 +318,7 @@ $$;
 CREATE OR REPLACE FUNCTION public.staff_list_teams()
 RETURNS SETOF public.teams
 LANGUAGE plpgsql
-STABLE
+VOLATILE
 SECURITY DEFINER
 SET search_path = public
 AS $$
@@ -334,7 +334,7 @@ $$;
 CREATE OR REPLACE FUNCTION public.staff_get_client_bundle(p_client_id UUID)
 RETURNS JSONB
 LANGUAGE plpgsql
-STABLE
+VOLATILE
 SECURITY DEFINER
 SET search_path = public
 AS $$

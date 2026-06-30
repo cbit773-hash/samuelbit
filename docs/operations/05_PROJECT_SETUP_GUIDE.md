@@ -62,7 +62,7 @@ export default {
       colors: {
         background: '#050505',
         primary: '#f59e0b',
-        // Añadir los colores definidos en docs/03_DESIGN_SYSTEM.md
+        // Añadir los colores definidos en ../design/03_DESIGN_SYSTEM.md
       }
     },
   },
